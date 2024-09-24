@@ -104,7 +104,13 @@ fn display_some_text() {
             .clear()
             .rgb(100, 230, 100)
             .bg_rgb(120, 120, 120)
-            .append("kuku!")
+            .append("again!")
+            .clear()
+            .italic()
+            .append(" and now some italic ")
+            .clear()
+            .underline()
+            .append("and underlined")
             .clear()
     );
 }

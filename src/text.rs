@@ -149,6 +149,16 @@ impl Text {
         self
     }
 
+    pub fn italic(mut self) -> Self {
+        let _ = write!(&mut self.content, "{}", self.color_palette.italic());
+        self
+    }
+
+    pub fn underline(mut self) -> Self {
+        let _ = write!(&mut self.content, "{}", self.color_palette.underline());
+        self
+    }
+
     pub fn clear(mut self) -> Self {
         let _ = write!(&mut self.content, "{}", self.color_palette.clear());
         self

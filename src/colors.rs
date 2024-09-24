@@ -139,6 +139,20 @@ impl ColorPalette {
         }
     }
 
+    pub fn italic(&self) -> &str {
+        match self.color_mode {
+            ColorMode::On => "\u{1b}[3m",
+            _ => "",
+        }
+    }
+
+    pub fn underline(&self) -> &str {
+        match self.color_mode {
+            ColorMode::On => "\u{1b}[4m",
+            _ => "",
+        }
+    }
+
     pub fn clear(&self) -> &str {
         match self.color_mode {
             ColorMode::On => "\u{1b}[0m",
