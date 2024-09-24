@@ -1,13 +1,22 @@
 [package]
 name = "antex"
-version = "0.0.0"
+version = "0.0.1"
 authors = ["Dariusz Depta <depta@engos.de>"]
-description = "ANSI/ASCII text and tree"
+description = "Styled text and tree"
 documentation = "https://docs.rs/antex"
 repository = "https://github.com/EngosSoftware/antex.git"
-keywords = ["ansi", "ascii", "text", "tree"]
-categories = ["command-line-utilities", "encoding"]
+keywords = ["ansi", "ascii", "text", "tree", "styled"]
+categories = ["text-processing", "visualization", "encoding"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
 
+[lib]
+name = "antex"
+path = "src/lib.rs"
+
+[[bin]]
+name = "antex"
+path = "src/main.rs"
+
 [dependencies]
+atty = "0.2.14"
