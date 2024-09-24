@@ -90,14 +90,12 @@ fn display_some_text() {
         .append("world!")
         .clear()
         .print();
-    println!(
-        "{}",
-        Text::default()
-            .append("Hello ")
-            .red()
-            .append("world!")
-            .clear()
-    );
+    Text::default()
+        .append("Hello ")
+        .red()
+        .append("world!")
+        .clear()
+        .println();
     println!(
         "{}",
         Text::default()

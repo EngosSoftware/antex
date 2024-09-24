@@ -1,6 +1,6 @@
 [package]
 name = "antex"
-version = "0.0.3"
+version = "0.0.4"
 authors = ["Dariusz Depta <depta@engos.de>"]
 description = "Styled text and tree"
 documentation = "https://docs.rs/antex"
