@@ -1,0 +1,13 @@
+[package]
+name = "antex"
+version = "0.0.0"
+authors = ["Dariusz Depta <depta@engos.de>"]
+description = "ANSI/ASCII text and tree"
+documentation = "https://docs.rs/antex"
+repository = "https://github.com/EngosSoftware/antex.git"
+keywords = ["ansi", "ascii", "text", "tree"]
+categories = ["command-line-utilities", "encoding"]
+license = "MIT OR Apache-2.0"
+edition = "2021"
+
+[dependencies]
