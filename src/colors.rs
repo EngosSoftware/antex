@@ -1,5 +1,7 @@
 //! # Terminal color sequences
 
+use std::io::IsTerminal;
+
 /// Color mode to switch terminal colouring `ON` or `OFF`.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum ColorMode {
@@ -9,19 +11,23 @@ pub enum ColorMode {
     Off,
 }
 
-impl From<String> for ColorMode {
+impl Default for ColorMode {
+    fn default() -> Self {
+        if std::io::stdout().is_terminal() {
+            Self::On
+        } else {
+            Self::Off
+        }
+    }
+}
+
+impl From<&str> for ColorMode {
     /// Converts a string into [ColorMode].
-    fn from(value: String) -> Self {
+    fn from(value: &str) -> Self {
         match value.to_lowercase().trim() {
             "never" => Self::Off,
             "always" => Self::On,
-            _ => {
-                if atty::is(atty::Stream::Stdout) {
-                    Self::On
-                } else {
-                    Self::Off
-                }
-            }
+            _ => Self::default(),
         }
     }
 }

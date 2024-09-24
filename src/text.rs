@@ -16,7 +16,7 @@ impl std::fmt::Display for Text {
 
 impl Default for Text {
     fn default() -> Self {
-        Self::new(ColorMode::On)
+        Self::new(ColorMode::default())
     }
 }
 

@@ -1,7 +1,6 @@
 mod colors;
 mod text;
 
-use colors::*;
 use text::*;
 
 fn display_colors_8() {
@@ -87,7 +86,7 @@ fn display_background_colors_256() {
 fn display_some_text() {
     println!(
         "{}",
-        Text::new(ColorMode::On)
+        Text::default()
             .append("Hello ")
             .red()
             .append("world!")
@@ -95,7 +94,7 @@ fn display_some_text() {
     );
     println!(
         "{}",
-        Text::new(ColorMode::On)
+        Text::default()
             .append("Hello ")
             .color(69)
             .append("world!")

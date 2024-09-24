@@ -17,6 +17,3 @@ path = "src/lib.rs"
 [[bin]]
 name = "antex"
 path = "src/main.rs"
-
-[dependencies]
-atty = "0.2.14"
