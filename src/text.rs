@@ -163,6 +163,14 @@ impl Text {
         let _ = write!(&mut self.content, "{}", self.color_palette.clear());
         self
     }
+
+    pub fn print(&self) {
+        print!("{}", self.content);
+    }
+
+    pub fn println(&self) {
+        println!("{}", self.content);
+    }
 }
 
 impl Add for Text {

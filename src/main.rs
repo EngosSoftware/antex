@@ -84,6 +84,12 @@ fn display_background_colors_256() {
 }
 
 fn display_some_text() {
+    Text::default()
+        .append("Hello ")
+        .red()
+        .append("world!")
+        .clear()
+        .print();
     println!(
         "{}",
         Text::default()
