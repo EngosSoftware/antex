@@ -1,30 +1,52 @@
 mod colors;
 mod text;
+mod tree;
 
+use colors::*;
+use std::env;
 use text::*;
+use tree::*;
 
 fn display_colors_8() {
     println!("Foreground 8 colors:\n");
-    let text = Text::default()
+    Text::default()
         .black()
-        .append(" 0 ")
+        .s(" 0 ")
         .red()
-        .append(" 1 ")
+        .s(" 1 ")
         .green()
-        .append(" 2 ")
+        .s(" 2 ")
         .yellow()
-        .append(" 3 ")
+        .s(" 3 ")
         .blue()
-        .append(" 4 ")
+        .s(" 4 ")
         .magenta()
-        .append(" 5 ")
+        .s(" 5 ")
         .cyan()
-        .append(" 6 ")
+        .s(" 6 ")
         .white()
-        .append(" 7 ")
-        .clear();
-    println!("{}", text);
-    println!("{}", Text::default().bold() + text);
+        .s(" 7 ")
+        .clear()
+        .println();
+    Text::default()
+        .bold()
+        .color(BLACK)
+        .s(" 0 ")
+        .color(RED)
+        .s(" 1 ")
+        .color(GREEN)
+        .s(" 2 ")
+        .color(YELLOW)
+        .s(" 3 ")
+        .color(BLUE)
+        .s(" 4 ")
+        .color(MAGENTA)
+        .s(" 5 ")
+        .color(CYAN)
+        .s(" 6 ")
+        .color(WHITE)
+        .s(" 7 ")
+        .cprintln();
     println!();
 }
 
@@ -32,21 +54,21 @@ fn display_background_colors_8() {
     println!("Background 8 colors:\n");
     let text = Text::default()
         .bg_black()
-        .append(" 0 ")
+        .s(" 0 ")
         .bg_red()
-        .append(" 1 ")
+        .s(" 1 ")
         .bg_green()
-        .append(" 2 ")
+        .s(" 2 ")
         .bg_yellow()
-        .append(" 3 ")
+        .s(" 3 ")
         .bg_blue()
-        .append(" 4 ")
+        .s(" 4 ")
         .bg_magenta()
-        .append(" 5 ")
+        .s(" 5 ")
         .bg_cyan()
-        .append(" 6 ")
+        .s(" 6 ")
         .bg_white()
-        .append(" 7 ")
+        .s(" 7 ")
         .clear();
     println!("{}", text);
     println!("{}", Text::default().bold() + text);
@@ -59,7 +81,7 @@ fn display_colors_256() {
     for i in 0..16 {
         for j in 0..16 {
             let code = i * 16 + j;
-            text = text.color(code).append(&format!(" {code:>3} "));
+            text = text.color_256(code).s(format!(" {code:>3} "));
         }
         text = text.clear().nl()
     }
@@ -74,7 +96,7 @@ fn display_background_colors_256() {
     for i in 0..16 {
         for j in 0..16 {
             let code = i * 16 + j;
-            text = text.bg_color(code).append(&format!(" {code:>3} "));
+            text = text.bg_color_256(code).s(format!(" {code:>3} "));
         }
         text = text.clear().nl()
     }
@@ -85,37 +107,130 @@ fn display_background_colors_256() {
 
 fn display_some_text() {
     Text::default()
-        .append("Hello ")
+        .s("Hello")
+        .space()
         .red()
-        .append("world!")
+        .s("world!")
         .clear()
         .print();
+
     Text::default()
-        .append("Hello ")
+        .s("Hello ")
         .red()
-        .append("world!")
+        .s("world!")
         .clear()
         .println();
-    println!(
-        "{}",
-        Text::default()
-            .append("Hello ")
-            .color(69)
-            .append("world!")
-            .bold()
-            .append("world!")
-            .clear()
-            .rgb(100, 230, 100)
-            .bg_rgb(120, 120, 120)
-            .append("again!")
-            .clear()
-            .italic()
-            .append(" and now some italic ")
-            .clear()
-            .underline()
-            .append("and underlined")
-            .clear()
-    );
+
+    Text::default()
+        .s("Hello ")
+        .color_256(69)
+        .s("world!")
+        .bold()
+        .s("world!")
+        .clear()
+        .rgb(100, 230, 100)
+        .bg_rgb(120, 120, 120)
+        .s("again")
+        .dot()
+        .clear()
+        .italic()
+        .spaces(4)
+        .s("and now some italic ")
+        .clear()
+        .underline()
+        .s("and underlined")
+        .nl()
+        .cprint()
+}
+
+fn display_tree() {
+    let cm = ColorMode::default();
+    let root = TreeNode::node()
+        .line(Text::new(cm).blue().plural("My node", 4).colon().clear())
+        .child(
+            TreeNode::node()
+                .line(Text::new(cm).slash().s("node 1"))
+                .child(
+                    TreeNode::leaf()
+                        .line(Text::new(cm).s("line 1_1"))
+                        .line(Text::new(cm).s("line 1_2"))
+                        .line(Text::new(cm).s("line 1_3"))
+                        .line(Text::new(cm).s("line 1_4"))
+                        .done(),
+                )
+                .child(
+                    TreeNode::leaf()
+                        .line(Text::new(cm).s("only one line"))
+                        .done(),
+                )
+                .done(),
+        )
+        .child(
+            TreeNode::node()
+                .line(Text::new(cm).s("node 2").dots())
+                .child(
+                    TreeNode::leaf()
+                        .line(Text::new(cm).s("only one line"))
+                        .done(),
+                )
+                .child(
+                    TreeNode::leaf()
+                        .line(Text::new(cm).s("line 2_1"))
+                        .line(Text::new(cm).s("line 2_2"))
+                        .line(Text::new(cm).s("line 2_3"))
+                        .line(Text::new(cm).s("line 2_4"))
+                        .done(),
+                )
+                .child(
+                    TreeNode::leaf()
+                        .line(Text::new(cm).s("only one line"))
+                        .done(),
+                )
+                .done(),
+        )
+        .child(
+            TreeNode::node()
+                .line(Text::new(cm).bg_color(BLUE).s("node 3").clear())
+                .child(
+                    TreeNode::node()
+                        .line(Text::new(cm).s("node 1"))
+                        .child(
+                            TreeNode::leaf()
+                                .line(Text::new(cm).s("line 3_1_1"))
+                                .line(Text::new(cm).s("line 3_1_2"))
+                                .line(Text::new(cm).s("line 3_1_3"))
+                                .line(Text::new(cm).s("line 3_1_4"))
+                                .done(),
+                        )
+                        .child(
+                            TreeNode::leaf()
+                                .line(Text::new(cm).s("only one line"))
+                                .done(),
+                        )
+                        .done(),
+                )
+                .child(
+                    TreeNode::leaf()
+                        .line(Text::new(cm).s("line 3_1"))
+                        .line(Text::new(cm).s("line 3_2"))
+                        .line(Text::new(cm).s("line 3_3"))
+                        .line(Text::new(cm).s("line 3_4"))
+                        .done(),
+                )
+                .child(
+                    TreeNode::leaf()
+                        .line(Text::new(cm).s("only one line"))
+                        .done(),
+                )
+                .done(),
+        )
+        .done();
+
+    println!("{}", root);
+
+    let mut buffer = String::new();
+    let _ = root.write_indent(&mut buffer, 30);
+    println!("{}", buffer);
 }
 
 fn display_all() {
@@ -124,9 +239,34 @@ fn display_all() {
     display_colors_256();
     display_background_colors_256();
     display_some_text();
+    display_tree();
 }
 
 fn main() {
-    println!();
-    display_all();
+    let args: Vec<String> = env::args().collect();
+    if args.len() != 2 {
+        Text::default()
+            .red()
+            .s("Invalid number of arguments!")
+            .clear()
+            .println();
+        return;
+    }
+    match args[1].to_lowercase().trim() {
+        "1" => display_colors_8(),
+        "2" => display_background_colors_8(),
+        "3" => display_colors_256(),
+        "4" => display_background_colors_256(),
+        "5" => display_some_text(),
+        "6" => display_tree(),
+        "100" => display_all(),
+        _ => {
+            Text::default()
+                .red()
+                .s("Unknown command: ")
+                .clear()
+                .s(args[1].clone())
+                .println();
+        }
+    }
 }
