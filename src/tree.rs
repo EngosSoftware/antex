@@ -1,37 +1,46 @@
 //! # Styled tree
 
-use crate::colors::ColorMode;
 use crate::text::Text;
+use std::fmt;
+use std::fmt::Display;
 
 const NONE: &str = "   ";
 const EDGE: &str = " └─";
 const PIPE: &str = " │ ";
 const FORK: &str = " ├─";
 
-pub struct Tree {
-    root: TreeNode,
+/// Types of nodes in styled tree.
+pub enum TreeNode {
+    /// Root or intermediary node in tree, always have one or mode child nodes.
+    Node(Text, Vec<TreeNode>),
+    /// Leaf node in the tree, never has any child nodes.
+    Leaf(Vec<Text>),
 }
 
-impl std::fmt::Display for Tree {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl Display for TreeNode {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         self.write(f)
     }
 }
 
-impl Tree {
-    pub fn new(root: TreeNode) -> Self {
-        Self { root }
+impl TreeNode {
+    pub fn node() -> NodeBuilder {
+        NodeBuilder::default()
     }
 
-    /// Writes the tree to provided writer.
-    pub fn write(&self, f: &mut dyn std::fmt::Write) -> std::fmt::Result {
-        self.write_node(f, &self.root, &[])
+    pub fn leaf() -> LeafBuilder {
+        LeafBuilder::default()
     }
 
-    /// Writes the tree to provided writer with specified indentation.
-    pub fn write_indent(&self, f: &mut dyn std::fmt::Write, indent: usize) -> std::fmt::Result {
+    /// Writes node to provided writer.
+    pub fn write(&self, f: &mut dyn fmt::Write) -> fmt::Result {
+        Self::write_node(f, self, &[])
+    }
+
+    /// Writes node to provided writer with specified indentation.
+    pub fn write_indent(&self, f: &mut dyn fmt::Write, indent: usize) -> fmt::Result {
         let mut tree = String::default();
-        self.write_node(&mut tree, &self.root, &[])?;
+        Self::write_node(&mut tree, self, &[])?;
         let indent = " ".repeat(indent);
         for line in tree.lines() {
             writeln!(f, "{}{}", indent, line)?;
@@ -39,13 +48,8 @@ impl Tree {
         Ok(())
     }
 
-    /// Writes the specified node to provided writer.
-    fn write_node(
-        &self,
-        f: &mut dyn std::fmt::Write,
-        node: &TreeNode,
-        level: &[usize],
-    ) -> std::fmt::Result {
+    /// Writes node.
+    fn write_node(f: &mut dyn fmt::Write, node: &TreeNode, level: &[usize]) -> fmt::Result {
         let max_pos = level.len();
         let mut second_line = String::new();
         for (pos, lev) in level.iter().enumerate() {
@@ -74,7 +78,7 @@ impl Tree {
                     let mut level_next = level.to_vec();
                     level_next.push(deep);
                     deep -= 1;
-                    self.write_node(f, node, &level_next)?;
+                    Self::write_node(f, node, &level_next)?;
                 }
             }
             TreeNode::Leaf(lines) => {
@@ -87,24 +91,6 @@ impl Tree {
             }
         }
         Ok(())
-    }
-}
-
-/// Types of nodes in styled tree.
-pub enum TreeNode {
-    /// Root or intermediary node in tree, always have one or mode child nodes.
-    Node(Text, Vec<TreeNode>),
-    /// Leaf node in the tree, never has any child nodes.
-    Leaf(Vec<Text>),
-}
-
-impl TreeNode {
-    pub fn node() -> NodeBuilder {
-        NodeBuilder::default()
-    }
-
-    pub fn leaf() -> LeafBuilder {
-        LeafBuilder::default()
     }
 }
 
@@ -176,6 +162,7 @@ impl NodeBuilder {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::colors::ColorMode;
     use std::fmt::Write;
 
     const EXPECTED: &str = r#"
@@ -211,91 +198,89 @@ mod tests {
     fn test_ascii_tree() {
         let cm = ColorMode::Off;
         let root = TreeNode::node()
-            .line(Text::new(cm).str("node 1"))
+            .line(Text::new(cm).s("node 1"))
             .child(
                 TreeNode::node()
-                    .line(Text::new(cm).str("node 1_1"))
+                    .line(Text::new(cm).s("node 1_1"))
                     .child(
                         TreeNode::leaf()
-                            .line(Text::new(cm).str("line 1_1_1"))
-                            .line(Text::new(cm).str("line 1_1_2"))
-                            .line(Text::new(cm).str("line 1_1_3"))
-                            .line(Text::new(cm).str("line 1_1_4"))
+                            .line(Text::new(cm).s("line 1_1_1"))
+                            .line(Text::new(cm).s("line 1_1_2"))
+                            .line(Text::new(cm).s("line 1_1_3"))
+                            .line(Text::new(cm).s("line 1_1_4"))
                             .done(),
                     )
                     .child(
                         TreeNode::leaf()
-                            .line(Text::new(cm).str("only one line"))
+                            .line(Text::new(cm).s("only one line"))
                             .done(),
                     )
                     .done(),
             )
             .child(
                 TreeNode::node()
-                    .line(Text::new(cm).str("node 1_2"))
+                    .line(Text::new(cm).s("node 1_2"))
                     .child(
                         TreeNode::leaf()
-                            .line(Text::new(cm).str("only one line"))
+                            .line(Text::new(cm).s("only one line"))
                             .done(),
                     )
                     .child(
                         TreeNode::leaf()
-                            .line(Text::new(cm).str("line 1_2_1"))
-                            .line(Text::new(cm).str("line 1_2_2"))
-                            .line(Text::new(cm).str("line 1_2_3"))
-                            .line(Text::new(cm).str("line 1_2_4"))
+                            .line(Text::new(cm).s("line 1_2_1"))
+                            .line(Text::new(cm).s("line 1_2_2"))
+                            .line(Text::new(cm).s("line 1_2_3"))
+                            .line(Text::new(cm).s("line 1_2_4"))
                             .done(),
                     )
                     .child(
                         TreeNode::leaf()
-                            .line(Text::new(cm).str("only one line"))
+                            .line(Text::new(cm).s("only one line"))
                             .done(),
                     )
                     .done(),
             )
             .child(
                 TreeNode::node()
-                    .line(Text::new(cm).str("node 1_3"))
+                    .line(Text::new(cm).s("node 1_3"))
                     .child(
                         TreeNode::node()
-                            .line(Text::new(cm).str("node 1_3_1"))
+                            .line(Text::new(cm).s("node 1_3_1"))
                             .child(
                                 TreeNode::leaf()
-                                    .line(Text::new(cm).str("line 1_3_1_1"))
-                                    .line(Text::new(cm).str("line 1_3_1_2"))
-                                    .line(Text::new(cm).str("line 1_3_1_3"))
-                                    .line(Text::new(cm).str("line 1_3_1_4"))
+                                    .line(Text::new(cm).s("line 1_3_1_1"))
+                                    .line(Text::new(cm).s("line 1_3_1_2"))
+                                    .line(Text::new(cm).s("line 1_3_1_3"))
+                                    .line(Text::new(cm).s("line 1_3_1_4"))
                                     .done(),
                             )
                             .child(
                                 TreeNode::leaf()
-                                    .line(Text::new(cm).str("only one line"))
+                                    .line(Text::new(cm).s("only one line"))
                                     .done(),
                             )
                             .done(),
                     )
                     .child(
                         TreeNode::leaf()
-                            .line(Text::new(cm).str("line 1_3_1"))
-                            .line(Text::new(cm).str("line 1_3_2"))
-                            .line(Text::new(cm).str("line 1_3_3"))
-                            .line(Text::new(cm).str("line 1_3_4"))
+                            .line(Text::new(cm).s("line 1_3_1"))
+                            .line(Text::new(cm).s("line 1_3_2"))
+                            .line(Text::new(cm).s("line 1_3_3"))
+                            .line(Text::new(cm).s("line 1_3_4"))
                             .done(),
                     )
                     .child(
                         TreeNode::leaf()
-                            .line(Text::new(cm).str("only one line"))
+                            .line(Text::new(cm).s("only one line"))
                             .done(),
                     )
                     .done(),
             )
             .done();
 
-        let tree = Tree::new(root);
-
         let mut output = String::new();
         let _ = writeln!(&mut output);
-        let _ = tree.write(&mut output);
+        let _ = root.write(&mut output);
         assert_eq!(EXPECTED, output);
     }
 }
