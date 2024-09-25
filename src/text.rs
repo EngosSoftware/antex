@@ -21,21 +21,26 @@ impl Default for Text {
 }
 
 impl From<ColorMode> for Text {
-    fn from(color_mode: ColorMode) -> Self {
-        Self::new(color_mode)
+    fn from(cm: ColorMode) -> Self {
+        Self::new(cm)
     }
 }
 
 impl Text {
-    pub fn new(color_mode: ColorMode) -> Self {
+    pub fn new(cm: ColorMode) -> Self {
         Self {
-            color_palette: color_mode.into(),
+            color_palette: cm.into(),
             content: String::default(),
         }
     }
 
-    pub fn append(mut self, text: &str) -> Self {
-        let _ = write!(&mut self.content, "{}", text);
+    pub fn str<T: ToString>(mut self, s: T) -> Self {
+        let _ = write!(&mut self.content, "{}", s.to_string());
+        self
+    }
+
+    pub fn chr(mut self, c: char) -> Self {
+        let _ = write!(&mut self.content, "{}", c);
         self
     }
 
