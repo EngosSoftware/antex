@@ -117,7 +117,7 @@ fn tree(cm: ColorMode) -> TreeNode {
   node(Color::Yellow, cm)
     .line()
     .blue()
-    .plural("Nodes", 4)
+    .plural("Node", 4)
     .colon()
     .clear()
     .end()
@@ -216,7 +216,7 @@ fn indented_tree(cm: ColorMode) {
 }
 
 fn main() {
-  let cm = ColorMode::default();
+  let cm = ColorMode::On;
   foreground_colors_8(cm);
   background_colors_8(cm);
   foreground_colors_256(cm);

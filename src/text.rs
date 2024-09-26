@@ -123,7 +123,7 @@ impl StyledText for Text {
   }
 
   fn dots(self) -> Self {
-    self.s("...")
+    self.s('‥')
   }
 
   fn plural<T: Display>(mut self, s: T, n: usize) -> Self {
