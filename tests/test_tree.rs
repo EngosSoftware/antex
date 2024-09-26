@@ -1,4 +1,4 @@
-use antex::{leaf, node, ColorMode, StyledText};
+use antex::{leaf, node, Color, ColorMode, StyledText};
 use std::fmt::Write;
 
 #[test]
@@ -33,12 +33,12 @@ fn building_tree_should_work() {
 "#;
 
   let cm = ColorMode::Off;
-  let root = node(cm)
+  let root = node(Color::Yellow, cm)
     .line()
     .s("node 1")
     .end()
     .child(
-      node(cm)
+      node(Color::Yellow, cm)
         .line()
         .s("node 1_1")
         .end()
@@ -62,7 +62,7 @@ fn building_tree_should_work() {
         .end(),
     )
     .child(
-      node(cm)
+      node(Color::Yellow, cm)
         .line()
         .s("node 1_2")
         .end()
@@ -87,12 +87,12 @@ fn building_tree_should_work() {
         .end(),
     )
     .child(
-      node(cm)
+      node(Color::Yellow, cm)
         .line()
         .s("node 1_3")
         .end()
         .child(
-          node(cm)
+          node(Color::Yellow, cm)
             .line()
             .s("node 1_3_1")
             .end()

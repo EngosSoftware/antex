@@ -30,21 +30,21 @@ fn display_colors_8(cm: ColorMode) {
     .println();
   Text::new(cm)
     .bold()
-    .color(BLACK)
+    .color(Color::Black)
     .s(" 0 ")
-    .color(RED)
+    .color(Color::Red)
     .s(" 1 ")
-    .color(GREEN)
+    .color(Color::Green)
     .s(" 2 ")
-    .color(YELLOW)
+    .color(Color::Yellow)
     .s(" 3 ")
-    .color(BLUE)
+    .color(Color::Blue)
     .s(" 4 ")
-    .color(MAGENTA)
+    .color(Color::Magenta)
     .s(" 5 ")
-    .color(CYAN)
+    .color(Color::Cyan)
     .s(" 6 ")
-    .color(WHITE)
+    .color(Color::White)
     .s(" 7 ")
     .cprintln();
   println!();
@@ -117,8 +117,8 @@ fn display_some_text() {
     .bold()
     .s("world!")
     .clear()
-    .rgb(100, 230, 100)
-    .bg_rgb(120, 120, 120)
+    .color_rgb((100, 230, 100))
+    .bg_color_rgb((120, 120, 120))
     .s("again")
     .dot()
     .clear()
@@ -134,7 +134,7 @@ fn display_some_text() {
 
 fn display_tree() {
   let cm = ColorMode::default();
-  let root = node(cm)
+  let root = node(Color::Yellow, cm)
     .line()
     .blue()
     .plural("My node", 4)
@@ -142,7 +142,7 @@ fn display_tree() {
     .clear()
     .end()
     .child(
-      node(cm)
+      node(Color::Long(124), cm)
         .line()
         .slash()
         .s("node 1")
@@ -167,7 +167,7 @@ fn display_tree() {
         .end(),
     )
     .child(
-      node(cm)
+      node(Color::White, cm)
         .line()
         .s("node 2")
         .dots()
@@ -193,16 +193,16 @@ fn display_tree() {
         .end(),
     )
     .child(
-      node(cm)
+      node(Color::Magenta, cm)
         .line()
-        .bg_color(BLUE)
+        .bg_color(Color::Blue)
         .s("node 3")
         .clear()
         .end()
         .child(
-          node(cm)
+          node(Color::Green, cm)
             .line()
-            .s("node 1")
+            .s("node 3_1")
             .end()
             .child(
               leaf(cm)

@@ -1,6 +1,6 @@
 //! # Styled tree
 
-use crate::colors::ColorMode;
+use crate::colors::{Color, ColorMode, RgbColor};
 use crate::text::{StyledText, Text};
 use std::fmt;
 use std::fmt::Display;
@@ -10,13 +10,20 @@ const EDGE: &str = " └─";
 const PIPE: &str = " │ ";
 const FORK: &str = " ├─";
 
+#[derive(Debug, Clone)]
+struct Level {
+  n: usize,
+  color: Color,
+  cm: ColorMode,
+}
+
 /// Types of nodes in styled tree.
 #[derive(Debug, Clone)]
 pub enum TreeNode {
   /// Root or intermediary node in tree, always have one or mode child nodes.
-  Node(Text, Vec<TreeNode>, ColorMode),
+  Node(Text, Vec<TreeNode>, Color, ColorMode),
   /// Leaf node in the tree, never has any child nodes.
-  Leaf(Vec<Text>, ColorMode),
+  Leaf(Vec<Text>),
 }
 
 impl Display for TreeNode {
@@ -28,13 +35,13 @@ impl Display for TreeNode {
 impl TreeNode {
   /// Writes node to provided writer.
   pub fn write(&self, f: &mut dyn fmt::Write) -> fmt::Result {
-    Self::write_node(f, self, &[])
+    Self::write_node(f, self, vec![])
   }
 
   /// Writes node to provided writer with specified indentation.
   pub fn write_indent(&self, f: &mut dyn fmt::Write, indent: usize) -> fmt::Result {
     let mut tree = String::default();
-    Self::write_node(&mut tree, self, &[])?;
+    Self::write_node(&mut tree, self, vec![])?;
     let indent = " ".repeat(indent);
     for line in tree.lines() {
       writeln!(f, "{}{}", indent, line)?;
@@ -43,39 +50,43 @@ impl TreeNode {
   }
 
   /// Writes node.
-  fn write_node(f: &mut dyn fmt::Write, node: &TreeNode, level: &[usize]) -> fmt::Result {
-    let max_pos = level.len();
+  fn write_node(f: &mut dyn fmt::Write, node: &TreeNode, levels: Vec<Level>) -> fmt::Result {
+    // display lines
+    let max_pos = levels.len();
     let mut second_line = String::new();
-    for (pos, lev) in level.iter().enumerate() {
+    for (pos, lev) in levels.iter().enumerate() {
+      let color = lev.cm.color(lev.color);
+      let clear = lev.cm.clear();
       let last_row = pos == max_pos - 1;
-      if *lev == 1 {
+      if lev.n == 1 {
         if !last_row {
-          write!(f, "{}", NONE)?
+          write!(f, "{}{}{}", color, NONE, clear)?
         } else {
-          write!(f, "{}", EDGE)?
+          write!(f, "{}{}{}", color, EDGE, clear)?
         }
-        second_line.push_str(NONE);
+        second_line.push_str(&format!("{}{}{}", color, NONE, clear));
       } else {
         if !last_row {
-          write!(f, "{}", PIPE)?
+          write!(f, "{}{}{}", color, PIPE, clear)?
         } else {
-          write!(f, "{}", FORK)?
+          write!(f, "{}{}{}", color, FORK, clear)?
         }
-        second_line.push_str(PIPE);
+        second_line.push_str(&format!("{}{}{}", color, PIPE, clear));
       }
     }
+    // traverse child nodes
     match node {
-      TreeNode::Node(title, children, _color_mode) => {
+      TreeNode::Node(title, children, color, cm) => {
         let mut deep = children.len();
         writeln!(f, " {}", title)?;
         for node in children {
-          let mut level_next = level.to_vec();
-          level_next.push(deep);
+          let mut level_next = levels.clone();
+          level_next.push(Level { n: deep, color: *color, cm: *cm });
           deep -= 1;
-          Self::write_node(f, node, &level_next)?;
+          Self::write_node(f, node, level_next)?;
         }
       }
-      TreeNode::Leaf(lines, _color_mode) => {
+      TreeNode::Leaf(lines) => {
         for (i, line) in lines.iter().enumerate() {
           match i {
             0 => writeln!(f, " {}", line)?,
@@ -88,8 +99,8 @@ impl TreeNode {
   }
 }
 
-pub fn node(cm: ColorMode) -> NodeBuilder {
-  NodeBuilder::new(cm)
+pub fn node(color: Color, cm: ColorMode) -> NodeBuilder {
+  NodeBuilder::new(color, cm)
 }
 
 pub fn leaf(cm: ColorMode) -> LeafBuilder {
@@ -123,7 +134,7 @@ impl LeafBuilder {
   }
 
   pub fn end(self) -> TreeNode {
-    TreeNode::Leaf(self.lines, self.cm)
+    TreeNode::Leaf(self.lines)
   }
 }
 
@@ -269,33 +280,43 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
-  fn color(mut self, value: u8) -> Self {
-    self.text = self.text.color(value);
+  fn color(mut self, c: Color) -> Self {
+    self.text = self.text.color(c);
     self
   }
 
-  fn bg_color(mut self, value: u8) -> Self {
-    self.text = self.text.bg_color(value);
+  fn bg_color(mut self, c: Color) -> Self {
+    self.text = self.text.bg_color(c);
     self
   }
 
-  fn color_256(mut self, value: u8) -> Self {
-    self.text = self.text.color_256(value);
+  fn color_8(mut self, c: u8) -> Self {
+    self.text = self.text.color_8(c);
     self
   }
 
-  fn bg_color_256(mut self, value: u8) -> Self {
-    self.text = self.text.bg_color_256(value);
+  fn bg_color_8(mut self, c: u8) -> Self {
+    self.text = self.text.bg_color_8(c);
     self
   }
 
-  fn rgb(mut self, r: u8, g: u8, b: u8) -> Self {
-    self.text = self.text.rgb(r, g, b);
+  fn color_256(mut self, c: u8) -> Self {
+    self.text = self.text.color_256(c);
     self
   }
 
-  fn bg_rgb(mut self, r: u8, g: u8, b: u8) -> Self {
-    self.text = self.text.bg_rgb(r, g, b);
+  fn bg_color_256(mut self, c: u8) -> Self {
+    self.text = self.text.bg_color_256(c);
+    self
+  }
+
+  fn color_rgb(mut self, c: RgbColor) -> Self {
+    self.text = self.text.color_rgb(c);
+    self
+  }
+
+  fn bg_color_rgb(mut self, c: RgbColor) -> Self {
+    self.text = self.text.bg_color_rgb(c);
     self
   }
 
@@ -323,14 +344,16 @@ impl StyledText for LeafLineBuilder {
 /// Builder for [TreeNode::Node].
 #[derive(Debug, Clone)]
 pub struct NodeBuilder {
+  color: Color,
   cm: ColorMode,
   line: Text,
   children: Vec<TreeNode>,
 }
 
 impl NodeBuilder {
-  pub fn new(cm: ColorMode) -> Self {
+  pub fn new(color: Color, cm: ColorMode) -> Self {
     Self {
+      color,
       cm,
       line: Text::new(cm),
       children: Vec::default(),
@@ -339,6 +362,7 @@ impl NodeBuilder {
 
   pub fn line(self) -> NodeLineBuilder {
     NodeLineBuilder {
+      color: self.color,
       cm: self.cm,
       children: self.children,
       text: Text::new(self.cm),
@@ -372,13 +396,14 @@ impl NodeBuilder {
   }
 
   pub fn end(self) -> TreeNode {
-    TreeNode::Node(self.line, self.children, self.cm)
+    TreeNode::Node(self.line, self.children, self.color, self.cm)
   }
 }
 
 /// Builder for [TreeNode::Node]'s text line.
 #[derive(Debug, Clone)]
 pub struct NodeLineBuilder {
+  color: Color,
   cm: ColorMode,
   children: Vec<TreeNode>,
   text: Text,
@@ -387,6 +412,7 @@ pub struct NodeLineBuilder {
 impl NodeLineBuilder {
   pub fn end(self) -> NodeBuilder {
     NodeBuilder {
+      color: self.color,
       cm: self.cm,
       line: self.text,
       children: self.children,
@@ -520,33 +546,43 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
-  fn color(mut self, value: u8) -> Self {
-    self.text = self.text.color(value);
+  fn color(mut self, c: Color) -> Self {
+    self.text = self.text.color(c);
     self
   }
 
-  fn bg_color(mut self, value: u8) -> Self {
-    self.text = self.text.bg_color(value);
+  fn bg_color(mut self, c: Color) -> Self {
+    self.text = self.text.bg_color(c);
     self
   }
 
-  fn color_256(mut self, value: u8) -> Self {
-    self.text = self.text.color_256(value);
+  fn color_8(mut self, c: u8) -> Self {
+    self.text = self.text.color_8(c);
     self
   }
 
-  fn bg_color_256(mut self, value: u8) -> Self {
-    self.text = self.text.bg_color_256(value);
+  fn bg_color_8(mut self, c: u8) -> Self {
+    self.text = self.text.bg_color_8(c);
     self
   }
 
-  fn rgb(mut self, r: u8, g: u8, b: u8) -> Self {
-    self.text = self.text.rgb(r, g, b);
+  fn color_256(mut self, c: u8) -> Self {
+    self.text = self.text.color_256(c);
     self
   }
 
-  fn bg_rgb(mut self, r: u8, g: u8, b: u8) -> Self {
-    self.text = self.text.bg_rgb(r, g, b);
+  fn bg_color_256(mut self, c: u8) -> Self {
+    self.text = self.text.bg_color_256(c);
+    self
+  }
+
+  fn color_rgb(mut self, c: RgbColor) -> Self {
+    self.text = self.text.color_rgb(c);
+    self
+  }
+
+  fn bg_color_rgb(mut self, c: RgbColor) -> Self {
+    self.text = self.text.bg_color_rgb(c);
     self
   }
 

@@ -1,4 +1,4 @@
-use crate::colors::ColorMode;
+use crate::colors::{Color, ColorMode, RgbColor};
 use std::fmt;
 use std::fmt::{Display, Write};
 use std::ops::Add;
@@ -29,12 +29,14 @@ pub trait StyledText {
   fn bg_magenta(self) -> Self;
   fn bg_cyan(self) -> Self;
   fn bg_white(self) -> Self;
-  fn color(self, value: u8) -> Self;
-  fn bg_color(self, value: u8) -> Self;
-  fn color_256(self, value: u8) -> Self;
-  fn bg_color_256(self, value: u8) -> Self;
-  fn rgb(self, r: u8, g: u8, b: u8) -> Self;
-  fn bg_rgb(self, r: u8, g: u8, b: u8) -> Self;
+  fn color(self, c: Color) -> Self;
+  fn bg_color(self, c: Color) -> Self;
+  fn color_8(self, c: u8) -> Self;
+  fn bg_color_8(self, c: u8) -> Self;
+  fn color_256(self, c: u8) -> Self;
+  fn bg_color_256(self, c: u8) -> Self;
+  fn color_rgb(self, c: RgbColor) -> Self;
+  fn bg_color_rgb(self, c: RgbColor) -> Self;
   fn bold(self) -> Self;
   fn italic(self) -> Self;
   fn underline(self) -> Self;
@@ -213,33 +215,43 @@ impl StyledText for Text {
     self
   }
 
-  fn color(mut self, value: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.color(value));
+  fn color(mut self, c: Color) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.color(c));
     self
   }
 
-  fn bg_color(mut self, value: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color(value));
+  fn bg_color(mut self, c: Color) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color(c));
     self
   }
 
-  fn color_256(mut self, value: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.color_256(value));
+  fn color_8(mut self, c: u8) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.color_8(c));
     self
   }
 
-  fn bg_color_256(mut self, value: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color_256(value));
+  fn bg_color_8(mut self, c: u8) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color_8(c));
     self
   }
 
-  fn rgb(mut self, r: u8, g: u8, b: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.rgb(r, g, b));
+  fn color_256(mut self, c: u8) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.color_256(c));
     self
   }
 
-  fn bg_rgb(mut self, r: u8, g: u8, b: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_rgb(r, g, b));
+  fn bg_color_256(mut self, c: u8) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color_256(c));
+    self
+  }
+
+  fn color_rgb(mut self, c: RgbColor) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.color_rgb(c));
+    self
+  }
+
+  fn bg_color_rgb(mut self, c: RgbColor) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color_rgb(c));
     self
   }
 
