@@ -11,7 +11,7 @@ pub trait StyledText {
   fn dot(self) -> Self;
   fn colon(self) -> Self;
   fn slash(self) -> Self;
-  fn dots(self) -> Self;
+  fn dots(self, n: usize) -> Self;
   fn plural<T: Display>(self, s: T, n: usize) -> Self;
   fn black(self) -> Self;
   fn red(self) -> Self;
@@ -122,8 +122,8 @@ impl StyledText for Text {
     self.s('/')
   }
 
-  fn dots(self) -> Self {
-    self.s('‥')
+  fn dots(self, n: usize) -> Self {
+    self.s(".".repeat(n))
   }
 
   fn plural<T: Display>(mut self, s: T, n: usize) -> Self {

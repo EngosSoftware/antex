@@ -85,7 +85,7 @@ fn text_properties(cm: ColorMode) {
   Text::new(cm).s("    Italic: ").italic().s("Hello").space().cyan().s("world!").cprintln();
   Text::new(cm).s("Underlined: ").underline().s("Hello").space().cyan().s("world!").cprintln();
   println!("Characters and new line:");
-  Text::new(cm).dot().colon().slash().spaces(2).dots().print();
+  Text::new(cm).dot().colon().slash().spaces(2).dots(2).print();
   Text::new(cm).nl().cprint();
 }
 
@@ -94,24 +94,26 @@ fn tree(cm: ColorMode) -> TreeNode {
   leaf_builder.add_line(Text::new(cm).s("only one line"));
   let last_leaf = leaf_builder.end();
   let mut node_builder = node(Color::Cyan, cm);
-  node_builder.set_line(Text::new(cm).slash().s("Node 1"));
+  node_builder.set_line(Text::new(cm).s("Node 1"));
   node_builder.add_child(
     leaf(cm)
       .line()
-      .s("line 1_1")
+      .s("line 1_1 / 1")
       .end()
       .line()
-      .s("line 1_2")
+      .s("  line 1_1 / 2")
       .end()
       .line()
-      .s("line 1_3")
+      .s("  line 1_1 / 3")
       .end()
       .line()
-      .s("line 1_4")
+      .s("  line 1_1 / 4")
       .end()
       .end(),
   );
-  node_builder.add_opt_child(Some(leaf(cm).line().s("only one line").end().end()));
+  node_builder.add_opt_child(Some(
+    leaf(cm).line().s("line 1_2 / 1").end().line().s("line 1_2 / 2").end().line().s("line 1_2 / 3").end().end(),
+  ));
   let tree_node = node_builder.end();
 
   node(Color::Yellow, cm)
@@ -125,8 +127,7 @@ fn tree(cm: ColorMode) -> TreeNode {
     .child(
       node(Color::White, cm)
         .line()
-        .s("node 2")
-        .dots()
+        .s("Node 2")
         .end()
         .child(leaf(cm).line().s("only one line").end().end())
         .opt_child(Some(
@@ -152,7 +153,7 @@ fn tree(cm: ColorMode) -> TreeNode {
       node(Color::Magenta, cm)
         .line()
         .bg_color(Color::Blue)
-        .s("node 3")
+        .s("Node 3")
         .clear()
         .end()
         .child(

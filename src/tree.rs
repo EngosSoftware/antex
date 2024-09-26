@@ -190,8 +190,8 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
-  fn dots(mut self) -> Self {
-    self.text = self.text.dots();
+  fn dots(mut self, n: usize) -> Self {
+    self.text = self.text.dots(n);
     self
   }
 
@@ -456,8 +456,8 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
-  fn dots(mut self) -> Self {
-    self.text = self.text.dots();
+  fn dots(mut self, n: usize) -> Self {
+    self.text = self.text.dots(n);
     self
   }
 
