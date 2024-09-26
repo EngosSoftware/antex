@@ -7,9 +7,9 @@ use std::env;
 use text::*;
 use tree::*;
 
-fn display_colors_8() {
+fn display_colors_8(cm: ColorMode) {
   println!("Foreground 8 colors:\n");
-  Text::default()
+  Text::new(cm)
     .black()
     .s(" 0 ")
     .red()
@@ -28,7 +28,7 @@ fn display_colors_8() {
     .s(" 7 ")
     .clear()
     .println();
-  Text::default()
+  Text::new(cm)
     .bold()
     .color(BLACK)
     .s(" 0 ")
@@ -134,66 +134,115 @@ fn display_some_text() {
 
 fn display_tree() {
   let cm = ColorMode::default();
-  let root = TreeNode::node()
-    .line(Text::new(cm).blue().plural("My node", 4).colon().clear())
+  let root = node(cm)
+    .line()
+    .blue()
+    .plural("My node", 4)
+    .colon()
+    .clear()
+    .end()
     .child(
-      TreeNode::node()
-        .line(Text::new(cm).slash().s("node 1"))
+      node(cm)
+        .line()
+        .slash()
+        .s("node 1")
+        .end()
         .child(
-          TreeNode::leaf()
-            .line(Text::new(cm).s("line 1_1"))
-            .line(Text::new(cm).s("line 1_2"))
-            .line(Text::new(cm).s("line 1_3"))
-            .line(Text::new(cm).s("line 1_4"))
-            .done(),
+          leaf(cm)
+            .line()
+            .s("line 1_1")
+            .end()
+            .line()
+            .s("line 1_2")
+            .end()
+            .line()
+            .s("line 1_3")
+            .end()
+            .line()
+            .s("line 1_4")
+            .end()
+            .end(),
         )
-        .child(TreeNode::leaf().line(Text::new(cm).s("only one line")).done())
-        .done(),
+        .child(leaf(cm).line().s("only one line").end().end())
+        .end(),
     )
     .child(
-      TreeNode::node()
-        .line(Text::new(cm).s("node 2").dots())
-        .child(TreeNode::leaf().line(Text::new(cm).s("only one line")).done())
+      node(cm)
+        .line()
+        .s("node 2")
+        .dots()
+        .end()
+        .child(leaf(cm).line().s("only one line").end().end())
         .child(
-          TreeNode::leaf()
-            .line(Text::new(cm).s("line 2_1"))
-            .line(Text::new(cm).s("line 2_2"))
-            .line(Text::new(cm).s("line 2_3"))
-            .line(Text::new(cm).s("line 2_4"))
-            .done(),
+          leaf(cm)
+            .line()
+            .s("line 2_1")
+            .end()
+            .line()
+            .s("line 2_2")
+            .end()
+            .line()
+            .s("line 2_3")
+            .end()
+            .line()
+            .s("line 2_4")
+            .end()
+            .end(),
         )
-        .child(TreeNode::leaf().line(Text::new(cm).s("only one line")).done())
-        .done(),
+        .child(leaf(cm).line().s("only one line").end().end())
+        .end(),
     )
     .child(
-      TreeNode::node()
-        .line(Text::new(cm).bg_color(BLUE).s("node 3").clear())
+      node(cm)
+        .line()
+        .bg_color(BLUE)
+        .s("node 3")
+        .clear()
+        .end()
         .child(
-          TreeNode::node()
-            .line(Text::new(cm).s("node 1"))
+          node(cm)
+            .line()
+            .s("node 1")
+            .end()
             .child(
-              TreeNode::leaf()
-                .line(Text::new(cm).s("line 3_1_1"))
-                .line(Text::new(cm).s("line 3_1_2"))
-                .line(Text::new(cm).s("line 3_1_3"))
-                .line(Text::new(cm).s("line 3_1_4"))
-                .done(),
+              leaf(cm)
+                .line()
+                .s("line 3_1_1")
+                .end()
+                .line()
+                .s("line 3_1_2")
+                .end()
+                .line()
+                .s("line 3_1_3")
+                .end()
+                .line()
+                .s("line 3_1_4")
+                .end()
+                .end(),
             )
-            .child(TreeNode::leaf().line(Text::new(cm).s("only one line")).done())
-            .done(),
+            .child(leaf(cm).line().s("only one line").end().end())
+            .end(),
         )
         .child(
-          TreeNode::leaf()
-            .line(Text::new(cm).s("line 3_1"))
-            .line(Text::new(cm).s("line 3_2"))
-            .line(Text::new(cm).s("line 3_3"))
-            .line(Text::new(cm).s("line 3_4"))
-            .done(),
+          leaf(cm)
+            .line()
+            .s("line 3_1")
+            .end()
+            .line()
+            .s("line 3_2")
+            .end()
+            .line()
+            .s("line 3_3")
+            .end()
+            .line()
+            .s("line 3_4")
+            .end()
+            .end(),
         )
-        .child(TreeNode::leaf().line(Text::new(cm).s("only one line")).done())
-        .done(),
+        .child(leaf(cm).line().s("only one line").end().end())
+        .end(),
     )
-    .done();
+    .end();
 
   println!("{}", root);
 
@@ -202,8 +251,8 @@ fn display_tree() {
   println!("{}", buffer);
 }
 
-fn display_all() {
-  display_colors_8();
+fn display_all(cm: ColorMode) {
+  display_colors_8(cm);
   display_background_colors_8();
   display_colors_256();
   display_background_colors_256();
@@ -212,19 +261,20 @@ fn display_all() {
 }
 
 fn main() {
+  let cm = ColorMode::On;
   let args: Vec<String> = env::args().collect();
   if args.len() != 2 {
     Text::default().red().s("Invalid number of arguments!").clear().println();
     return;
   }
   match args[1].to_lowercase().trim() {
-    "1" => display_colors_8(),
+    "1" => display_colors_8(cm),
     "2" => display_background_colors_8(),
     "3" => display_colors_256(),
     "4" => display_background_colors_256(),
     "5" => display_some_text(),
     "6" => display_tree(),
-    "100" => display_all(),
+    "100" => display_all(cm),
     _ => {
       Text::default().red().s("Unknown command: ").clear().s(args[1].clone()).println();
     }

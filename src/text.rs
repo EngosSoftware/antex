@@ -1,6 +1,45 @@
 use crate::colors::ColorMode;
+use std::fmt;
 use std::fmt::{Display, Write};
 use std::ops::Add;
+
+pub trait StyledText {
+  fn s<T: Display>(self, s: T) -> Self;
+  fn nl(self) -> Self;
+  fn space(self) -> Self;
+  fn spaces(self, n: usize) -> Self;
+  fn dot(self) -> Self;
+  fn colon(self) -> Self;
+  fn slash(self) -> Self;
+  fn dots(self) -> Self;
+  fn plural<T: Display>(self, s: T, n: usize) -> Self;
+  fn black(self) -> Self;
+  fn red(self) -> Self;
+  fn green(self) -> Self;
+  fn yellow(self) -> Self;
+  fn blue(self) -> Self;
+  fn magenta(self) -> Self;
+  fn cyan(self) -> Self;
+  fn white(self) -> Self;
+  fn bg_black(self) -> Self;
+  fn bg_red(self) -> Self;
+  fn bg_green(self) -> Self;
+  fn bg_yellow(self) -> Self;
+  fn bg_blue(self) -> Self;
+  fn bg_magenta(self) -> Self;
+  fn bg_cyan(self) -> Self;
+  fn bg_white(self) -> Self;
+  fn color(self, value: u8) -> Self;
+  fn bg_color(self, value: u8) -> Self;
+  fn color_256(self, value: u8) -> Self;
+  fn bg_color_256(self, value: u8) -> Self;
+  fn rgb(self, r: u8, g: u8, b: u8) -> Self;
+  fn bg_rgb(self, r: u8, g: u8, b: u8) -> Self;
+  fn bold(self) -> Self;
+  fn italic(self) -> Self;
+  fn underline(self) -> Self;
+  fn clear(self) -> Self;
+}
 
 #[derive(Debug, Clone)]
 pub struct Text {
@@ -8,8 +47,8 @@ pub struct Text {
   content: String,
 }
 
-impl std::fmt::Display for Text {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl Display for Text {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     write!(f, "{}", self.content)
   }
 }
@@ -34,178 +73,6 @@ impl Text {
     }
   }
 
-  pub fn s<T: Display>(mut self, s: T) -> Self {
-    let _ = write!(&mut self.content, "{}", s);
-    self
-  }
-
-  pub fn nl(self) -> Self {
-    self.s('\n')
-  }
-
-  pub fn space(self) -> Self {
-    self.s(' ')
-  }
-
-  pub fn spaces(self, count: usize) -> Self {
-    self.s(" ".repeat(count))
-  }
-
-  pub fn dot(self) -> Self {
-    self.s('.')
-  }
-
-  pub fn colon(self) -> Self {
-    self.s(':')
-  }
-
-  pub fn slash(self) -> Self {
-    self.s('/')
-  }
-
-  pub fn dots(self) -> Self {
-    self.s("...")
-  }
-
-  pub fn plural<T: Display>(mut self, s: T, number: usize) -> Self {
-    let _ = if number == 1 {
-      write!(&mut self.content, "{}", s)
-    } else {
-      write!(&mut self.content, "{}s", s)
-    };
-    self
-  }
-
-  pub fn black(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.black());
-    self
-  }
-
-  pub fn red(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.red());
-    self
-  }
-
-  pub fn green(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.green());
-    self
-  }
-
-  pub fn yellow(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.yellow());
-    self
-  }
-
-  pub fn blue(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.blue());
-    self
-  }
-
-  pub fn magenta(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.magenta());
-    self
-  }
-
-  pub fn cyan(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.cyan());
-    self
-  }
-
-  pub fn white(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.white());
-    self
-  }
-
-  pub fn bg_black(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_black());
-    self
-  }
-
-  pub fn bg_red(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_red());
-    self
-  }
-
-  pub fn bg_green(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_green());
-    self
-  }
-
-  pub fn bg_yellow(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_yellow());
-    self
-  }
-
-  pub fn bg_blue(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_blue());
-    self
-  }
-
-  pub fn bg_magenta(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_magenta());
-    self
-  }
-
-  pub fn bg_cyan(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_cyan());
-    self
-  }
-
-  pub fn bg_white(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_white());
-    self
-  }
-
-  pub fn color(mut self, value: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.color(value));
-    self
-  }
-
-  pub fn bg_color(mut self, value: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color(value));
-    self
-  }
-
-  pub fn color_256(mut self, value: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.color_256(value));
-    self
-  }
-
-  pub fn bg_color_256(mut self, value: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color_256(value));
-    self
-  }
-
-  pub fn rgb(mut self, r: u8, g: u8, b: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.rgb(r, g, b));
-    self
-  }
-
-  pub fn bg_rgb(mut self, r: u8, g: u8, b: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_rgb(r, g, b));
-    self
-  }
-
-  pub fn bold(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bold());
-    self
-  }
-
-  pub fn italic(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.italic());
-    self
-  }
-
-  pub fn underline(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.underline());
-    self
-  }
-
-  pub fn clear(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.clear());
-    self
-  }
-
   pub fn print(&self) {
     print!("{}", self.content);
   }
@@ -220,6 +87,180 @@ impl Text {
 
   pub fn cprintln(&self) {
     println!("{}{}", self.content, self.color_mode.clear());
+  }
+}
+
+impl StyledText for Text {
+  fn s<T: Display>(mut self, s: T) -> Self {
+    let _ = write!(&mut self.content, "{}", s);
+    self
+  }
+
+  fn nl(self) -> Self {
+    self.s('\n')
+  }
+
+  fn space(self) -> Self {
+    self.s(' ')
+  }
+
+  fn spaces(self, count: usize) -> Self {
+    self.s(" ".repeat(count))
+  }
+
+  fn dot(self) -> Self {
+    self.s('.')
+  }
+
+  fn colon(self) -> Self {
+    self.s(':')
+  }
+
+  fn slash(self) -> Self {
+    self.s('/')
+  }
+
+  fn dots(self) -> Self {
+    self.s("...")
+  }
+
+  fn plural<T: Display>(mut self, s: T, n: usize) -> Self {
+    let _ = if n == 1 {
+      write!(&mut self.content, "{}", s)
+    } else {
+      write!(&mut self.content, "{}s", s)
+    };
+    self
+  }
+
+  fn black(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.black());
+    self
+  }
+
+  fn red(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.red());
+    self
+  }
+
+  fn green(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.green());
+    self
+  }
+
+  fn yellow(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.yellow());
+    self
+  }
+
+  fn blue(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.blue());
+    self
+  }
+
+  fn magenta(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.magenta());
+    self
+  }
+
+  fn cyan(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.cyan());
+    self
+  }
+
+  fn white(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.white());
+    self
+  }
+
+  fn bg_black(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_black());
+    self
+  }
+
+  fn bg_red(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_red());
+    self
+  }
+
+  fn bg_green(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_green());
+    self
+  }
+
+  fn bg_yellow(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_yellow());
+    self
+  }
+
+  fn bg_blue(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_blue());
+    self
+  }
+
+  fn bg_magenta(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_magenta());
+    self
+  }
+
+  fn bg_cyan(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_cyan());
+    self
+  }
+
+  fn bg_white(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_white());
+    self
+  }
+
+  fn color(mut self, value: u8) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.color(value));
+    self
+  }
+
+  fn bg_color(mut self, value: u8) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color(value));
+    self
+  }
+
+  fn color_256(mut self, value: u8) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.color_256(value));
+    self
+  }
+
+  fn bg_color_256(mut self, value: u8) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color_256(value));
+    self
+  }
+
+  fn rgb(mut self, r: u8, g: u8, b: u8) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.rgb(r, g, b));
+    self
+  }
+
+  fn bg_rgb(mut self, r: u8, g: u8, b: u8) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bg_rgb(r, g, b));
+    self
+  }
+
+  fn bold(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bold());
+    self
+  }
+
+  fn italic(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.italic());
+    self
+  }
+
+  fn underline(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.underline());
+    self
+  }
+
+  fn clear(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.clear());
+    self
   }
 }
 
