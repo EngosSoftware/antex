@@ -1,6 +1,6 @@
 [package]
 name = "antex"
-version = "0.0.7"
+version = "0.0.8"
 authors = ["Dariusz Depta <depta@engos.de>"]
 description = "Styled text and tree in terminal"
 documentation = "https://docs.rs/antex"

@@ -195,6 +195,11 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
+  fn perc(mut self) -> Self {
+    self.text = self.text.perc();
+    self
+  }
+
   fn plural<T: Display>(mut self, s: T, n: usize) -> Self {
     self.text = self.text.plural(s, n);
     self
@@ -458,6 +463,11 @@ impl StyledText for NodeLineBuilder {
 
   fn dots(mut self, n: usize) -> Self {
     self.text = self.text.dots(n);
+    self
+  }
+
+  fn perc(mut self) -> Self {
+    self.text = self.text.perc();
     self
   }
 

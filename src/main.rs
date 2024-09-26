@@ -84,8 +84,8 @@ fn text_properties(cm: ColorMode) {
   Text::new(cm).s("Bgnd++Bold: ").bg_color(Color::Yellow).bold().s("Hello ").cyan().s("world!").cprintln();
   Text::new(cm).s("    Italic: ").italic().s("Hello").space().cyan().s("world!").cprintln();
   Text::new(cm).s("Underlined: ").underline().s("Hello").space().cyan().s("world!").cprintln();
-  println!("Characters and new line:");
-  Text::new(cm).dot().colon().slash().spaces(2).dots(2).print();
+  print!("         Characters: ");
+  Text::new(cm).dot().colon().slash().spaces(2).dots(2).perc().print();
   Text::new(cm).nl().cprint();
 }
 
