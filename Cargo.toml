@@ -2,7 +2,7 @@
 name = "antex"
 version = "0.0.6"
 authors = ["Dariusz Depta <depta@engos.de>"]
-description = "Styled text and tree"
+description = "Styled text and tree in terminal"
 documentation = "https://docs.rs/antex"
 repository = "https://github.com/EngosSoftware/antex.git"
 keywords = ["ansi", "ascii", "text", "tree", "styled"]
