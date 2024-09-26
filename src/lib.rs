@@ -1,3 +1,5 @@
+//! # Styled text and tree in terminal
+
 mod colors;
 mod text;
 mod tree;

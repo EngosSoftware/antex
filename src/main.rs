@@ -3,270 +3,225 @@ mod text;
 mod tree;
 
 use colors::*;
-use std::env;
 use text::*;
 use tree::*;
 
-fn display_colors_8() {
-    println!("Foreground 8 colors:\n");
-    Text::default()
-        .black()
-        .s(" 0 ")
-        .red()
-        .s(" 1 ")
-        .green()
-        .s(" 2 ")
-        .yellow()
-        .s(" 3 ")
-        .blue()
-        .s(" 4 ")
-        .magenta()
-        .s(" 5 ")
-        .cyan()
-        .s(" 6 ")
-        .white()
-        .s(" 7 ")
-        .clear()
-        .println();
-    Text::default()
-        .bold()
-        .color(BLACK)
-        .s(" 0 ")
-        .color(RED)
-        .s(" 1 ")
-        .color(GREEN)
-        .s(" 2 ")
-        .color(YELLOW)
-        .s(" 3 ")
-        .color(BLUE)
-        .s(" 4 ")
-        .color(MAGENTA)
-        .s(" 5 ")
-        .color(CYAN)
-        .s(" 6 ")
-        .color(WHITE)
-        .s(" 7 ")
-        .cprintln();
-    println!();
+fn foreground_colors_8(cm: ColorMode) {
+  println!("\nForeground 8 colors:\n");
+  Text::new(cm)
+    .color(Color::Black)
+    .s(" 0 ")
+    .red()
+    .s(" 1 ")
+    .green()
+    .s(" 2 ")
+    .yellow()
+    .s(" 3 ")
+    .blue()
+    .s(" 4 ")
+    .magenta()
+    .s(" 5 ")
+    .cyan()
+    .s(" 6 ")
+    .white()
+    .s(" 7 ")
+    .cprintln();
 }
 
-fn display_background_colors_8() {
-    println!("Background 8 colors:\n");
-    let text = Text::default()
-        .bg_black()
-        .s(" 0 ")
-        .bg_red()
-        .s(" 1 ")
-        .bg_green()
-        .s(" 2 ")
-        .bg_yellow()
-        .s(" 3 ")
-        .bg_blue()
-        .s(" 4 ")
-        .bg_magenta()
-        .s(" 5 ")
-        .bg_cyan()
-        .s(" 6 ")
-        .bg_white()
-        .s(" 7 ")
-        .clear();
-    println!("{}", text);
-    println!("{}", Text::default().bold() + text);
-    println!();
+fn background_colors_8(cm: ColorMode) {
+  println!("\nBackground 8 colors:\n");
+  Text::new(cm)
+    .bg_color(Color::Black)
+    .s(" 0 ")
+    .bg_red()
+    .s(" 1 ")
+    .bg_green()
+    .s(" 2 ")
+    .bg_yellow()
+    .s(" 3 ")
+    .bg_blue()
+    .s(" 4 ")
+    .bg_magenta()
+    .s(" 5 ")
+    .bg_cyan()
+    .s(" 6 ")
+    .bg_white()
+    .s(" 7 ")
+    .clear()
+    .println();
 }
 
-fn display_colors_256() {
-    println!("Foreground 256 colors:\n");
-    let mut text = Text::default();
-    for i in 0..16 {
-        for j in 0..16 {
-            let code = i * 16 + j;
-            text = text.color_256(code).s(format!(" {code:>3} "));
-        }
-        text = text.clear().nl()
+fn foreground_colors_256(cm: ColorMode) {
+  println!("\nForeground 256 colors:\n");
+  let mut text = Text::new(cm);
+  for i in 0..16 {
+    for j in 0..16 {
+      let code = i * 16 + j;
+      text = text.color_256(code).s(format!(" {code:>3} "));
     }
-    println!("{}", text);
-    println!("{}", Text::default().bold() + text);
-    println!();
+    text = text.clear().nl()
+  }
+  text.cprintln();
 }
 
-fn display_background_colors_256() {
-    println!("Background 256 colors:\n");
-    let mut text = Text::default();
-    for i in 0..16 {
-        for j in 0..16 {
-            let code = i * 16 + j;
-            text = text.bg_color_256(code).s(format!(" {code:>3} "));
-        }
-        text = text.clear().nl()
+fn background_colors_256(cm: ColorMode) {
+  println!("\nBackground 256 colors:\n");
+  let mut text = Text::new(cm);
+  for i in 0..16 {
+    for j in 0..16 {
+      let code = i * 16 + j;
+      text = text.bg_color_256(code).s(format!(" {code:>3} "));
     }
-    println!("{}", text);
-    println!("{}", Text::default().bold() + text);
-    println!();
+    text = text.clear().nl()
+  }
+  text.cprintln();
 }
 
-fn display_some_text() {
-    Text::default()
-        .s("Hello")
-        .space()
-        .red()
-        .s("world!")
-        .clear()
-        .print();
-
-    Text::default()
-        .s("Hello ")
-        .red()
-        .s("world!")
-        .clear()
-        .println();
-
-    Text::default()
-        .s("Hello ")
-        .color_256(69)
-        .s("world!")
-        .bold()
-        .s("world!")
-        .clear()
-        .rgb(100, 230, 100)
-        .bg_rgb(120, 120, 120)
-        .s("again")
-        .dot()
-        .clear()
-        .italic()
-        .spaces(4)
-        .s("and now some italic ")
-        .clear()
-        .underline()
-        .s("and underlined")
-        .nl()
-        .cprint()
+fn text_properties(cm: ColorMode) {
+  Text::new(cm).s("    Colour: ").s("Hello").space().cyan().s("world!").cprintln();
+  Text::new(cm).s("Background: ").bg_color(Color::Yellow).s("Hello").space().cyan().s("world!").cprintln();
+  Text::new(cm).s("      Bold: ").bold().s("Hello ").cyan().s("world!").cprintln();
+  Text::new(cm).s("Bgnd++Bold: ").bg_color(Color::Yellow).bold().s("Hello ").cyan().s("world!").cprintln();
+  Text::new(cm).s("    Italic: ").italic().s("Hello").space().cyan().s("world!").cprintln();
+  Text::new(cm).s("Underlined: ").underline().s("Hello").space().cyan().s("world!").cprintln();
+  println!("Characters and new line:");
+  Text::new(cm).dot().colon().slash().spaces(2).dots().print();
+  Text::new(cm).nl().cprint();
 }
 
-fn display_tree() {
-    let cm = ColorMode::default();
-    let root = TreeNode::node()
-        .line(Text::new(cm).blue().plural("My node", 4).colon().clear())
-        .child(
-            TreeNode::node()
-                .line(Text::new(cm).slash().s("node 1"))
-                .child(
-                    TreeNode::leaf()
-                        .line(Text::new(cm).s("line 1_1"))
-                        .line(Text::new(cm).s("line 1_2"))
-                        .line(Text::new(cm).s("line 1_3"))
-                        .line(Text::new(cm).s("line 1_4"))
-                        .done(),
-                )
-                .child(
-                    TreeNode::leaf()
-                        .line(Text::new(cm).s("only one line"))
-                        .done(),
-                )
-                .done(),
-        )
-        .child(
-            TreeNode::node()
-                .line(Text::new(cm).s("node 2").dots())
-                .child(
-                    TreeNode::leaf()
-                        .line(Text::new(cm).s("only one line"))
-                        .done(),
-                )
-                .child(
-                    TreeNode::leaf()
-                        .line(Text::new(cm).s("line 2_1"))
-                        .line(Text::new(cm).s("line 2_2"))
-                        .line(Text::new(cm).s("line 2_3"))
-                        .line(Text::new(cm).s("line 2_4"))
-                        .done(),
-                )
-                .child(
-                    TreeNode::leaf()
-                        .line(Text::new(cm).s("only one line"))
-                        .done(),
-                )
-                .done(),
-        )
-        .child(
-            TreeNode::node()
-                .line(Text::new(cm).bg_color(BLUE).s("node 3").clear())
-                .child(
-                    TreeNode::node()
-                        .line(Text::new(cm).s("node 1"))
-                        .child(
-                            TreeNode::leaf()
-                                .line(Text::new(cm).s("line 3_1_1"))
-                                .line(Text::new(cm).s("line 3_1_2"))
-                                .line(Text::new(cm).s("line 3_1_3"))
-                                .line(Text::new(cm).s("line 3_1_4"))
-                                .done(),
-                        )
-                        .child(
-                            TreeNode::leaf()
-                                .line(Text::new(cm).s("only one line"))
-                                .done(),
-                        )
-                        .done(),
-                )
-                .child(
-                    TreeNode::leaf()
-                        .line(Text::new(cm).s("line 3_1"))
-                        .line(Text::new(cm).s("line 3_2"))
-                        .line(Text::new(cm).s("line 3_3"))
-                        .line(Text::new(cm).s("line 3_4"))
-                        .done(),
-                )
-                .child(
-                    TreeNode::leaf()
-                        .line(Text::new(cm).s("only one line"))
-                        .done(),
-                )
-                .done(),
-        )
-        .done();
+fn tree(cm: ColorMode) -> TreeNode {
+  let mut leaf_builder = leaf(cm);
+  leaf_builder.add_line(Text::new(cm).s("only one line"));
+  let last_leaf = leaf_builder.end();
+  let mut node_builder = node(Color::Cyan, cm);
+  node_builder.set_line(Text::new(cm).slash().s("Node 1"));
+  node_builder.add_child(
+    leaf(cm)
+      .line()
+      .s("line 1_1")
+      .end()
+      .line()
+      .s("line 1_2")
+      .end()
+      .line()
+      .s("line 1_3")
+      .end()
+      .line()
+      .s("line 1_4")
+      .end()
+      .end(),
+  );
+  node_builder.add_opt_child(Some(leaf(cm).line().s("only one line").end().end()));
+  let tree_node = node_builder.end();
 
-    println!("{}", root);
-
-    let mut buffer = String::new();
-    let _ = root.write_indent(&mut buffer, 30);
-    println!("{}", buffer);
+  node(Color::Yellow, cm)
+    .line()
+    .blue()
+    .plural("Node", 4)
+    .colon()
+    .clear()
+    .end()
+    .child(tree_node)
+    .child(
+      node(Color::White, cm)
+        .line()
+        .s("node 2")
+        .dots()
+        .end()
+        .child(leaf(cm).line().s("only one line").end().end())
+        .opt_child(Some(
+          leaf(cm)
+            .line()
+            .s("line 2_1")
+            .end()
+            .line()
+            .s("line 2_2")
+            .end()
+            .line()
+            .s("line 2_3")
+            .end()
+            .line()
+            .s("line 2_4")
+            .end()
+            .end(),
+        ))
+        .child(leaf(cm).line().s("only one line").end().end())
+        .end(),
+    )
+    .child(
+      node(Color::Magenta, cm)
+        .line()
+        .bg_color(Color::Blue)
+        .s("node 3")
+        .clear()
+        .end()
+        .child(
+          node(Color::Green, cm)
+            .line()
+            .s("node 3_1")
+            .end()
+            .child(
+              leaf(cm)
+                .line()
+                .s("line 3_1_1")
+                .end()
+                .line()
+                .s("line 3_1_2")
+                .end()
+                .line()
+                .s("line 3_1_3")
+                .end()
+                .line()
+                .s("line 3_1_4")
+                .end()
+                .end(),
+            )
+            .child(leaf(cm).line().s("only one line").end().end())
+            .end(),
+        )
+        .child(
+          leaf(cm)
+            .line()
+            .s("line 3_1")
+            .end()
+            .line()
+            .s("line 3_2")
+            .end()
+            .line()
+            .s("line 3_3")
+            .end()
+            .line()
+            .s("line 3_4")
+            .end()
+            .end(),
+        )
+        .child(last_leaf)
+        .end(),
+    )
+    .end()
 }
 
-fn display_all() {
-    display_colors_8();
-    display_background_colors_8();
-    display_colors_256();
-    display_background_colors_256();
-    display_some_text();
-    display_tree();
+fn left_aligned_tree(cm: ColorMode) {
+  println!("\nStyled tree:\n");
+  let root = tree(cm);
+  println!("{}", root);
+}
+
+fn indented_tree(cm: ColorMode) {
+  println!("\nIndented styled tree:\n");
+  let root = tree(cm);
+  let mut buffer = String::new();
+  let _ = root.write_indent(&mut buffer, 10);
+  println!("{}", buffer);
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    if args.len() != 2 {
-        Text::default()
-            .red()
-            .s("Invalid number of arguments!")
-            .clear()
-            .println();
-        return;
-    }
-    match args[1].to_lowercase().trim() {
-        "1" => display_colors_8(),
-        "2" => display_background_colors_8(),
-        "3" => display_colors_256(),
-        "4" => display_background_colors_256(),
-        "5" => display_some_text(),
-        "6" => display_tree(),
-        "100" => display_all(),
-        _ => {
-            Text::default()
-                .red()
-                .s("Unknown command: ")
-                .clear()
-                .s(args[1].clone())
-                .println();
-        }
-    }
+  let cm = ColorMode::On;
+  foreground_colors_8(cm);
+  background_colors_8(cm);
+  foreground_colors_256(cm);
+  background_colors_256(cm);
+  text_properties(cm);
+  left_aligned_tree(cm);
+  indented_tree(cm);
 }
