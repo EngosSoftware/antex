@@ -1,4 +1,6 @@
-mod test_text_add;
+mod test_add;
+mod test_characters;
+mod test_colors;
 
 use antex::{ColorMode, StyledText, Text};
 
@@ -85,4 +87,13 @@ fn text_coloured_from_cm_on_should_work() {
   assert_eq!("\u{1b}[33mHello", text.to_string());
   assert_eq!("\u{1b}[33mHello", format!("{}", text));
   assert_eq!(r#"Text { color_mode: On, content: "\u{1b}[33mHello" }"#, format!("{:?}", text));
+}
+
+#[test]
+fn text_printing_should_work() {
+  let text = Text::new(ColorMode::On).yellow().s("Hello");
+  text.print();
+  text.println();
+  text.printc();
+  text.printlnc();
 }

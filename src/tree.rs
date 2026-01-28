@@ -190,13 +190,18 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
-  fn dots(mut self, n: usize) -> Self {
-    self.text = self.text.dots(n);
+  fn backslash(mut self) -> Self {
+    self.text = self.text.backslash();
     self
   }
 
   fn perc(mut self) -> Self {
     self.text = self.text.perc();
+    self
+  }
+
+  fn repeat<T: Display>(mut self, s: T, n: usize) -> Self {
+    self.text = self.text.repeat(s, n);
     self
   }
 
@@ -340,8 +345,8 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
-  fn clear(mut self) -> Self {
-    self.text = self.text.clear();
+  fn c(mut self) -> Self {
+    self.text = self.text.c();
     self
   }
 }
@@ -461,13 +466,18 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
-  fn dots(mut self, n: usize) -> Self {
-    self.text = self.text.dots(n);
+  fn backslash(mut self) -> Self {
+    self.text = self.text.backslash();
     self
   }
 
   fn perc(mut self) -> Self {
     self.text = self.text.perc();
+    self
+  }
+
+  fn repeat<T: Display>(mut self, s: T, n: usize) -> Self {
+    self.text = self.text.repeat(s, n);
     self
   }
 
@@ -611,8 +621,8 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
-  fn clear(mut self) -> Self {
-    self.text = self.text.clear();
+  fn c(mut self) -> Self {
+    self.text = self.text.c();
     self
   }
 }

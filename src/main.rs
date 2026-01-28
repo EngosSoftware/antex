@@ -25,7 +25,7 @@ fn foreground_colors_8(cm: ColorMode) {
     .s(" 6 ")
     .white()
     .s(" 7 ")
-    .cprintln();
+    .printlnc();
 }
 
 fn background_colors_8(cm: ColorMode) {
@@ -47,7 +47,7 @@ fn background_colors_8(cm: ColorMode) {
     .s(" 6 ")
     .bg_white()
     .s(" 7 ")
-    .clear()
+    .c()
     .println();
 }
 
@@ -59,9 +59,9 @@ fn foreground_colors_256(cm: ColorMode) {
       let code = i * 16 + j;
       text = text.color_256(code).s(format!(" {code:>3} "));
     }
-    text = text.clear().nl()
+    text = text.c().nl()
   }
-  text.cprintln();
+  text.printlnc();
 }
 
 fn background_colors_256(cm: ColorMode) {
@@ -72,21 +72,21 @@ fn background_colors_256(cm: ColorMode) {
       let code = i * 16 + j;
       text = text.bg_color_256(code).s(format!(" {code:>3} "));
     }
-    text = text.clear().nl()
+    text = text.c().nl()
   }
-  text.cprintln();
+  text.printlnc();
 }
 
 fn text_properties(cm: ColorMode) {
-  Text::new(cm).s("    Colour: ").s("Hello").space().cyan().s("world!").cprintln();
-  Text::new(cm).s("Background: ").bg_color(Color::Yellow).s("Hello").space().cyan().s("world!").cprintln();
-  Text::new(cm).s("      Bold: ").bold().s("Hello ").cyan().s("world!").cprintln();
-  Text::new(cm).s("Bgnd++Bold: ").bg_color(Color::Yellow).bold().s("Hello ").cyan().s("world!").cprintln();
-  Text::new(cm).s("    Italic: ").italic().s("Hello").space().cyan().s("world!").cprintln();
-  Text::new(cm).s("Underlined: ").underline().s("Hello").space().cyan().s("world!").cprintln();
+  Text::new(cm).s("    Colour: ").s("Hello").space().cyan().s("world!").printlnc();
+  Text::new(cm).s("Background: ").bg_color(Color::Yellow).s("Hello").space().cyan().s("world!").printlnc();
+  Text::new(cm).s("      Bold: ").bold().s("Hello ").cyan().s("world!").printlnc();
+  Text::new(cm).s("Bgnd++Bold: ").bg_color(Color::Yellow).bold().s("Hello ").cyan().s("world!").printlnc();
+  Text::new(cm).s("    Italic: ").italic().s("Hello").space().cyan().s("world!").printlnc();
+  Text::new(cm).s("Underlined: ").underline().s("Hello").space().cyan().s("world!").printlnc();
   print!("         Characters: ");
-  Text::new(cm).dot().colon().slash().spaces(2).dots(2).perc().print();
-  Text::new(cm).nl().cprint();
+  Text::new(cm).dot().colon().slash().spaces(2).repeat('.', 2).perc().print();
+  Text::new(cm).nl().printc();
 }
 
 fn tree(cm: ColorMode) -> TreeNode {
@@ -121,7 +121,7 @@ fn tree(cm: ColorMode) -> TreeNode {
     .blue()
     .plural("Node", 4)
     .colon()
-    .clear()
+    .c()
     .end()
     .child(tree_node)
     .child(
@@ -154,7 +154,7 @@ fn tree(cm: ColorMode) -> TreeNode {
         .line()
         .bg_color(Color::Blue)
         .s("Node 3")
-        .clear()
+        .c()
         .end()
         .child(
           node(Color::Green, cm)
