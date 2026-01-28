@@ -53,6 +53,8 @@ fn named_colors_should_work() {
   assert_eq!("\u{1b}[35mhello", on!().color(Color::Magenta).s("hello").to_string());
   assert_eq!("\u{1b}[36mhello", on!().color(Color::Cyan).s("hello").to_string());
   assert_eq!("\u{1b}[37mhello", on!().color(Color::White).s("hello").to_string());
+  assert_eq!("\u{1b}[38;5;132mhello", on!().color(Color::Long(132)).s("hello").to_string());
+  assert_eq!("\u{1b}[38;2;18;34;72mhello", on!().color(Color::Rgb((18, 34, 72))).s("hello").to_string());
 
   assert_eq!("hello", off!().color(Color::Black).s("hello").to_string());
   assert_eq!("hello", off!().color(Color::Red).s("hello").to_string());
@@ -62,6 +64,8 @@ fn named_colors_should_work() {
   assert_eq!("hello", off!().color(Color::Magenta).s("hello").to_string());
   assert_eq!("hello", off!().color(Color::Cyan).s("hello").to_string());
   assert_eq!("hello", off!().color(Color::White).s("hello").to_string());
+  assert_eq!("hello", off!().color(Color::Long(132)).s("hello").to_string());
+  assert_eq!("hello", off!().color(Color::Rgb((18, 34, 72))).s("hello").to_string());
 }
 
 #[test]
