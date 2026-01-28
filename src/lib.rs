@@ -4,6 +4,6 @@ mod colors;
 mod text;
 mod tree;
 
-pub use colors::*;
-pub use text::*;
-pub use tree::*;
+pub use colors::{Color, ColorMode, RgbColor};
+pub use text::{StyledText, Text};
+pub use tree::{leaf, node, TreeNode};
