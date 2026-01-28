@@ -103,11 +103,11 @@ impl Text {
   }
 
   pub fn eprintln(&self) {
-    println!("{}", self.content);
+    eprintln!("{}", self.content);
   }
 
   pub fn eprintlnc(&self) {
-    println!("{}{}", self.content, self.color_mode.clear());
+    eprintln!("{}{}", self.content, self.color_mode.clear());
   }
 }
 
