@@ -93,6 +93,22 @@ impl Text {
   pub fn printlnc(&self) {
     println!("{}{}", self.content, self.color_mode.clear());
   }
+
+  pub fn eprint(&self) {
+    eprint!("{}", self.content);
+  }
+
+  pub fn eprintc(&self) {
+    eprint!("{}{}", self.content, self.color_mode.clear());
+  }
+
+  pub fn eprintln(&self) {
+    println!("{}", self.content);
+  }
+
+  pub fn eprintlnc(&self) {
+    println!("{}{}", self.content, self.color_mode.clear());
+  }
 }
 
 impl StyledText for Text {

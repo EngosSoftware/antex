@@ -99,4 +99,8 @@ fn text_printing_should_work() {
   text.println();
   text.printc();
   text.printlnc();
+  text.eprint();
+  text.eprintln();
+  text.eprintc();
+  text.eprintlnc();
 }
