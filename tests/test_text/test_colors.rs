@@ -78,6 +78,8 @@ fn named_bg_colors_should_work() {
   assert_eq!("\u{1b}[45mhello", on!().bg_color(Color::Magenta).s("hello").to_string());
   assert_eq!("\u{1b}[46mhello", on!().bg_color(Color::Cyan).s("hello").to_string());
   assert_eq!("\u{1b}[47mhello", on!().bg_color(Color::White).s("hello").to_string());
+  assert_eq!("\u{1b}[48;5;132mhello", on!().bg_color(Color::Long(132)).s("hello").to_string());
+  assert_eq!("\u{1b}[48;2;18;34;72mhello", on!().bg_color(Color::Rgb((18, 34, 72))).s("hello").to_string());
 
   assert_eq!("hello", off!().bg_color(Color::Black).s("hello").to_string());
   assert_eq!("hello", off!().bg_color(Color::Red).s("hello").to_string());
@@ -87,6 +89,8 @@ fn named_bg_colors_should_work() {
   assert_eq!("hello", off!().bg_color(Color::Magenta).s("hello").to_string());
   assert_eq!("hello", off!().bg_color(Color::Cyan).s("hello").to_string());
   assert_eq!("hello", off!().bg_color(Color::White).s("hello").to_string());
+  assert_eq!("hello", off!().bg_color(Color::Long(132)).s("hello").to_string());
+  assert_eq!("hello", off!().bg_color(Color::Rgb((18, 34, 72))).s("hello").to_string());
 }
 
 #[test]
@@ -169,4 +173,18 @@ fn bg_color_rgb_should_work() {
       }
     }
   }
+}
+
+#[test]
+fn color_conversion_should_work() {
+  assert_eq!("\u{1b}[30mhello", on!().color(0.into()).s("hello").to_string());
+  assert_eq!("\u{1b}[31mhello", on!().color(1.into()).s("hello").to_string());
+  assert_eq!("\u{1b}[32mhello", on!().color(2.into()).s("hello").to_string());
+  assert_eq!("\u{1b}[33mhello", on!().color(3.into()).s("hello").to_string());
+  assert_eq!("\u{1b}[34mhello", on!().color(4.into()).s("hello").to_string());
+  assert_eq!("\u{1b}[35mhello", on!().color(5.into()).s("hello").to_string());
+  assert_eq!("\u{1b}[36mhello", on!().color(6.into()).s("hello").to_string());
+  assert_eq!("\u{1b}[37mhello", on!().color(7.into()).s("hello").to_string());
+  assert_eq!("\u{1b}[38;5;132mhello", on!().color(132.into()).s("hello").to_string());
+  assert_eq!("\u{1b}[38;2;10;73;134mhello", on!().color((10, 73, 134).into()).s("hello").to_string());
 }
