@@ -1,3 +1,5 @@
+mod test_text_add;
+
 use antex::{ColorMode, StyledText, Text};
 
 #[test]
