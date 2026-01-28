@@ -1,6 +1,9 @@
+use super::*;
+
 mod test_add;
 mod test_characters;
 mod test_colors;
+mod test_formatting;
 
 use antex::{ColorMode, StyledText, Text};
 

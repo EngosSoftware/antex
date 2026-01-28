@@ -1,2 +1,18 @@
 mod test_text;
 mod test_tree;
+
+macro_rules! on {
+  () => {
+    Text::new(ColorMode::On)
+  };
+}
+
+use on;
+
+macro_rules! off {
+  () => {
+    Text::new(ColorMode::Off)
+  };
+}
+
+use off;
