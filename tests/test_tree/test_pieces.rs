@@ -1,5 +1,13 @@
 use antex::{node, Color, ColorMode, StyledText, Text};
 
+const EXPECTED: &str = r#"
+ root
+ ├─ child 1
+ ├─ child 2
+ │  └─ child 2a
+ └─ child 3
+"#;
+
 #[test]
 fn building_tree_from_pieces_should_work() {
   let cm = ColorMode::Off;
@@ -19,5 +27,5 @@ fn building_tree_from_pieces_should_work() {
   root.add_opt_child(Some(child_3));
   root.add_opt_child(None);
 
-  print!("{}", root.end());
+  assert_eq!(EXPECTED, format!("\n{}", root.end()));
 }
