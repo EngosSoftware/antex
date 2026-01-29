@@ -30,55 +30,40 @@ fn get_root() -> NodeBuilder {
 }
 
 fn get_leaf() -> TreeNode {
-  leaf(CM).line().s("leaf").end().end()
-}
-
-fn get_leaf_2() -> TreeNode {
   leaf(CM).line().s("leaf").end().line().s("line 2").end().end()
 }
 
 fn get_node(index: usize) -> NodeBuilder {
-  node(C, CM).line().s("node ").s(index).end().line().s("line ").s(index).end()
+  node(C, CM).line().s("node ").s(index).end()
+}
+
+fn get_tree() -> TreeNode {
+  get_root()
+    .child(get_node(1).child(get_node(2).child(get_leaf()).end()).end())
+    .child(get_node(3).end())
+    .end()
 }
 
 #[test]
 fn _0001() {
-  let tree = get_root().end();
+  let tree = get_tree();
   tree.write(&mut FailingWriter::new(6)).expect_err("");
+  tree.write(&mut FailingWriter::new(13)).expect_err("");
+  tree.write(&mut FailingWriter::new(26)).expect_err("");
+  tree.write(&mut FailingWriter::new(33)).expect_err("");
+  tree.write(&mut FailingWriter::new(49)).expect_err("");
+  tree.write(&mut FailingWriter::new(62)).expect_err("");
+  tree.write(&mut FailingWriter::new(81)).expect_err("");
 }
 
 #[test]
 fn _0002() {
-  let tree = get_root().child(get_leaf()).end();
-  tree.write(&mut FailingWriter::new(13)).expect_err("");
-}
-
-#[test]
-fn _0003() {
-  let tree = get_root().child(get_leaf()).end();
-  tree.write(&mut FailingWriter::new(14)).expect_err("");
-}
-
-#[test]
-fn _0004() {
-  let tree = get_root().child(get_node(1).child(get_leaf()).end()).end();
-  _ = tree.write(&mut FailingWriter::new(24));
-}
-
-#[test]
-fn _0005() {
-  let tree = get_root().child(get_node(1).child(get_leaf_2()).end()).end();
-  tree.write(&mut FailingWriter::new(51)).expect_err("");
-}
-
-#[test]
-fn _0006() {
-  let tree = get_root().child(get_node(1).child(get_node(2).child(get_leaf_2()).end()).end()).end();
-  tree.write(&mut FailingWriter::new(13)).expect_err("");
-}
-
-#[test]
-fn _0007() {
-  let tree = get_root().child(get_node(1).child(get_node(2).child(get_leaf_2()).end()).end()).end();
-  tree.write(&mut FailingWriter::new(24)).expect_err("");
+  let tree = get_tree();
+  tree.write_indent(&mut FailingWriter::new(6), 0).expect_err("");
+  tree.write_indent(&mut FailingWriter::new(13), 0).expect_err("");
+  tree.write_indent(&mut FailingWriter::new(26), 0).expect_err("");
+  tree.write_indent(&mut FailingWriter::new(33), 0).expect_err("");
+  tree.write_indent(&mut FailingWriter::new(49), 0).expect_err("");
+  tree.write_indent(&mut FailingWriter::new(62), 0).expect_err("");
+  tree.write_indent(&mut FailingWriter::new(81), 0).expect_err("");
 }

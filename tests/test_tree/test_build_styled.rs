@@ -135,6 +135,7 @@ fn building_styled_tree_should_work() {
         .child(
           leaf(cm)
             .line()
+            .bg_color(Color::None)
             .s("line 1_2_1")
             .end()
             .line()
