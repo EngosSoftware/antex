@@ -161,8 +161,8 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
-  fn c(mut self) -> Self {
-    self.text = self.text.c();
+  fn clear(mut self) -> Self {
+    self.text = self.text.clear();
     self
   }
 
@@ -397,8 +397,8 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
-  fn c(mut self) -> Self {
-    self.text = self.text.c();
+  fn clear(mut self) -> Self {
+    self.text = self.text.clear();
     self
   }
 

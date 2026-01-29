@@ -41,7 +41,7 @@ fn background_colors_8(cm: ColorMode) {
     .s(" 6 ")
     .bg_white()
     .s(" 7 ")
-    .c()
+    .clear()
     .println();
 }
 
@@ -53,7 +53,7 @@ fn foreground_colors_256(cm: ColorMode) {
       let code = i * 16 + j;
       text = text.color_256(code).s(format!(" {code:>3} "));
     }
-    text = text.c().s('\n')
+    text = text.clear().s('\n')
   }
   text.printlnc();
 }
@@ -66,7 +66,7 @@ fn background_colors_256(cm: ColorMode) {
       let code = i * 16 + j;
       text = text.bg_color_256(code).s(format!(" {code:>3} "));
     }
-    text = text.c().s('\n')
+    text = text.clear().s('\n')
   }
   text.printlnc();
 }
@@ -119,7 +119,7 @@ fn tree(cm: ColorMode) -> TreeNode {
     .blue()
     .plural("Node", 4)
     .s(':')
-    .c()
+    .clear()
     .end()
     .child(tree_node)
     .child(
@@ -152,7 +152,7 @@ fn tree(cm: ColorMode) -> TreeNode {
         .line()
         .bg_color(Color::Blue)
         .s("Node 3")
-        .c()
+        .clear()
         .end()
         .child(
           node(Color::Green, cm)

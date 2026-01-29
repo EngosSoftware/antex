@@ -9,7 +9,7 @@ pub trait StyledText {
   /// Adds content to text.
   fn s<T: Display>(self, s: T) -> Self;
   /// Clears all styling flags.
-  fn c(self) -> Self;
+  fn clear(self) -> Self;
   /// Adds repeated content to text.
   fn repeat<T: Display>(self, s: T, n: usize) -> Self;
   /// Adds -s suffix to the content when the number is not 1.
@@ -146,7 +146,7 @@ impl StyledText for Text {
     self
   }
 
-  fn c(mut self) -> Self {
+  fn clear(mut self) -> Self {
     let _ = write!(&mut self.content, "{}", self.cm.clear());
     self
   }
