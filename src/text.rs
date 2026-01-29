@@ -1,4 +1,5 @@
-use crate::colors::{Color, ColorMode, RgbColor};
+use crate::colors::{Color, RgbColor};
+use crate::mode::ColorMode;
 use std::fmt;
 use std::fmt::{Display, Write};
 use std::ops::Add;

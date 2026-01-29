@@ -1,6 +1,7 @@
 //! # Styled tree
 
-use crate::colors::{Color, ColorMode, RgbColor};
+use crate::colors::{Color, RgbColor};
+use crate::mode::ColorMode;
 use crate::text::{StyledText, Text};
 use std::fmt;
 use std::fmt::Display;

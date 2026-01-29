@@ -1,10 +1,4 @@
-mod colors;
-mod text;
-mod tree;
-
-use colors::*;
-use text::*;
-use tree::*;
+use antex::{leaf, node, Color, ColorMode, StyledText, Text, TreeNode};
 
 fn foreground_colors_8() {
   println!("\nForeground 8 colors:\n");
@@ -78,15 +72,19 @@ fn background_colors_256(cm: ColorMode) {
 }
 
 fn text_properties(cm: ColorMode) {
-  Text::new(cm).s("    Colour: ").s("Hello ").cyan().s("world!").printlnc();
-  Text::new(cm).s("Background: ").bg_color(Color::Yellow).s("Hello ").cyan().s("world!").printlnc();
-  Text::new(cm).s("      Bold: ").bold().s("Hello ").cyan().s("world!").printlnc();
-  Text::new(cm).s("Bgnd++Bold: ").bg_color(Color::Yellow).bold().s("Hello ").cyan().s("world!").printlnc();
-  Text::new(cm).s("    Italic: ").italic().s("Hello ").cyan().s("world!").printlnc();
-  Text::new(cm).s("Underlined: ").underline().s("Hello ").cyan().s("world!").printlnc();
-  print!("         Characters: ");
-  Text::new(cm).s(".:/").repeat(' ', 2).repeat('.', 2).s('%').print();
-  Text::new(cm).s("\n").printc();
+  Text::new(cm).s("            Color: ").s("Hello ").cyan().s("world!").printlnc();
+  Text::new(cm).s("       Background: ").bg_color(Color::Yellow).s("Hello ").cyan().s("world!").printlnc();
+  Text::new(cm).s("             Bold: ").bold().s("Hello ").cyan().s("world!").printlnc();
+  Text::new(cm)
+    .s("Background + Bold: ")
+    .bg_color(Color::Yellow)
+    .bold()
+    .s("Hello ")
+    .cyan()
+    .s("world!")
+    .printlnc();
+  Text::new(cm).s("           Italic: ").italic().s("Hello ").cyan().s("world!").printlnc();
+  Text::new(cm).s("        Underline: ").underline().s("Hello ").cyan().s("world!").printlnc();
 }
 
 fn tree(cm: ColorMode) -> TreeNode {
