@@ -6,7 +6,7 @@ use colors::*;
 use text::*;
 use tree::*;
 
-fn foreground_colors_8(cm: ColorMode) {
+fn foreground_colors_8() {
   println!("\nForeground 8 colors:\n");
   Text::default()
     .black()
@@ -59,7 +59,7 @@ fn foreground_colors_256(cm: ColorMode) {
       let code = i * 16 + j;
       text = text.color_256(code).s(format!(" {code:>3} "));
     }
-    text = text.c().nl()
+    text = text.c().s('\n')
   }
   text.printlnc();
 }
@@ -72,21 +72,21 @@ fn background_colors_256(cm: ColorMode) {
       let code = i * 16 + j;
       text = text.bg_color_256(code).s(format!(" {code:>3} "));
     }
-    text = text.c().nl()
+    text = text.c().s('\n')
   }
   text.printlnc();
 }
 
 fn text_properties(cm: ColorMode) {
-  Text::new(cm).s("    Colour: ").s("Hello").space().cyan().s("world!").printlnc();
-  Text::new(cm).s("Background: ").bg_color(Color::Yellow).s("Hello").space().cyan().s("world!").printlnc();
+  Text::new(cm).s("    Colour: ").s("Hello ").cyan().s("world!").printlnc();
+  Text::new(cm).s("Background: ").bg_color(Color::Yellow).s("Hello ").cyan().s("world!").printlnc();
   Text::new(cm).s("      Bold: ").bold().s("Hello ").cyan().s("world!").printlnc();
   Text::new(cm).s("Bgnd++Bold: ").bg_color(Color::Yellow).bold().s("Hello ").cyan().s("world!").printlnc();
-  Text::new(cm).s("    Italic: ").italic().s("Hello").space().cyan().s("world!").printlnc();
-  Text::new(cm).s("Underlined: ").underline().s("Hello").space().cyan().s("world!").printlnc();
+  Text::new(cm).s("    Italic: ").italic().s("Hello ").cyan().s("world!").printlnc();
+  Text::new(cm).s("Underlined: ").underline().s("Hello ").cyan().s("world!").printlnc();
   print!("         Characters: ");
-  Text::new(cm).dot().colon().slash().spaces(2).repeat('.', 2).perc().print();
-  Text::new(cm).nl().printc();
+  Text::new(cm).s(".:/").repeat(' ', 2).repeat('.', 2).s('%').print();
+  Text::new(cm).s("\n").printc();
 }
 
 fn tree(cm: ColorMode) -> TreeNode {
@@ -120,7 +120,7 @@ fn tree(cm: ColorMode) -> TreeNode {
     .line()
     .blue()
     .plural("Node", 4)
-    .colon()
+    .s(':')
     .c()
     .end()
     .child(tree_node)
@@ -218,7 +218,7 @@ fn indented_tree(cm: ColorMode) {
 
 fn main() {
   let cm = ColorMode::On;
-  foreground_colors_8(cm);
+  foreground_colors_8();
   background_colors_8(cm);
   foreground_colors_256(cm);
   background_colors_256(cm);

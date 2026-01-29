@@ -4,24 +4,35 @@ use std::fmt::{Display, Write};
 use std::ops::Add;
 
 pub trait StyledText {
+  /// Adds content to text.
   fn s<T: Display>(self, s: T) -> Self;
-  fn nl(self) -> Self;
-  fn space(self) -> Self;
-  fn spaces(self, n: usize) -> Self;
-  fn dot(self) -> Self;
-  fn colon(self) -> Self;
-  fn slash(self) -> Self;
-  fn backslash(self) -> Self;
-  fn perc(self) -> Self;
+  /// Clears all styling flags.
+  fn c(self) -> Self;
+  /// Adds repeated content to text.
   fn repeat<T: Display>(self, s: T, n: usize) -> Self;
+  /// Adds -s suffix to the content when the number is not 1.
   fn plural<T: Display>(self, s: T, n: usize) -> Self;
+  /// Style text as bold.
+  fn bold(self) -> Self;
+  /// Style text as italic.
+  fn italic(self) -> Self;
+  /// Style text as underlined.
+  fn underline(self) -> Self;
+  /// Sets the foreground color to black.
   fn black(self) -> Self;
+  /// Sets the foreground color to red.
   fn red(self) -> Self;
+  /// Sets the foreground color to green.
   fn green(self) -> Self;
+  /// Sets the foreground color to yellow.
   fn yellow(self) -> Self;
+  /// Sets the foreground color to blue.
   fn blue(self) -> Self;
+  /// Sets the foreground color to magenta.
   fn magenta(self) -> Self;
+  /// Sets the foreground color to cyan.
   fn cyan(self) -> Self;
+  /// Sets the foreground color to white.
   fn white(self) -> Self;
   fn bg_black(self) -> Self;
   fn bg_red(self) -> Self;
@@ -39,11 +50,6 @@ pub trait StyledText {
   fn bg_color_256(self, c: u8) -> Self;
   fn color_rgb(self, c: RgbColor) -> Self;
   fn bg_color_rgb(self, c: RgbColor) -> Self;
-  fn bold(self) -> Self;
-  fn italic(self) -> Self;
-  fn underline(self) -> Self;
-  /// Clears all coloring settings.
-  fn c(self) -> Self;
 }
 
 #[derive(Debug, Clone)]
@@ -117,36 +123,9 @@ impl StyledText for Text {
     self
   }
 
-  fn nl(self) -> Self {
-    self.s('\n')
-  }
-
-  fn space(self) -> Self {
-    self.s(' ')
-  }
-
-  fn spaces(self, count: usize) -> Self {
-    self.s(" ".repeat(count))
-  }
-
-  fn dot(self) -> Self {
-    self.s('.')
-  }
-
-  fn colon(self) -> Self {
-    self.s(':')
-  }
-
-  fn slash(self) -> Self {
-    self.s('/')
-  }
-
-  fn backslash(self) -> Self {
-    self.s('\\')
-  }
-
-  fn perc(self) -> Self {
-    self.s('%')
+  fn c(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.clear());
+    self
   }
 
   fn repeat<T: Display>(self, s: T, n: usize) -> Self {
@@ -159,6 +138,21 @@ impl StyledText for Text {
     } else {
       write!(&mut self.content, "{}s", s)
     };
+    self
+  }
+
+  fn bold(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.bold());
+    self
+  }
+
+  fn italic(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.italic());
+    self
+  }
+
+  fn underline(mut self) -> Self {
+    let _ = write!(&mut self.content, "{}", self.color_mode.underline());
     self
   }
 
@@ -281,31 +275,12 @@ impl StyledText for Text {
     let _ = write!(&mut self.content, "{}", self.color_mode.bg_color_rgb(c));
     self
   }
-
-  fn bold(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bold());
-    self
-  }
-
-  fn italic(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.italic());
-    self
-  }
-
-  fn underline(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.underline());
-    self
-  }
-
-  fn c(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.clear());
-    self
-  }
 }
 
 impl Add for Text {
   type Output = Self;
 
+  /// Concatenates styled texts.
   fn add(self, rhs: Self) -> Self::Output {
     let mut content = self.content;
     content.push_str(&rhs.content);

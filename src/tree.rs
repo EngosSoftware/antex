@@ -160,43 +160,8 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
-  fn nl(mut self) -> Self {
-    self.text = self.text.nl();
-    self
-  }
-
-  fn space(mut self) -> Self {
-    self.text = self.text.space();
-    self
-  }
-
-  fn spaces(mut self, n: usize) -> Self {
-    self.text = self.text.spaces(n);
-    self
-  }
-
-  fn dot(mut self) -> Self {
-    self.text = self.text.dot();
-    self
-  }
-
-  fn colon(mut self) -> Self {
-    self.text = self.text.colon();
-    self
-  }
-
-  fn slash(mut self) -> Self {
-    self.text = self.text.slash();
-    self
-  }
-
-  fn backslash(mut self) -> Self {
-    self.text = self.text.backslash();
-    self
-  }
-
-  fn perc(mut self) -> Self {
-    self.text = self.text.perc();
+  fn c(mut self) -> Self {
+    self.text = self.text.c();
     self
   }
 
@@ -207,6 +172,21 @@ impl StyledText for LeafLineBuilder {
 
   fn plural<T: Display>(mut self, s: T, n: usize) -> Self {
     self.text = self.text.plural(s, n);
+    self
+  }
+
+  fn bold(mut self) -> Self {
+    self.text = self.text.bold();
+    self
+  }
+
+  fn italic(mut self) -> Self {
+    self.text = self.text.italic();
+    self
+  }
+
+  fn underline(mut self) -> Self {
+    self.text = self.text.underline();
     self
   }
 
@@ -327,26 +307,6 @@ impl StyledText for LeafLineBuilder {
 
   fn bg_color_rgb(mut self, c: RgbColor) -> Self {
     self.text = self.text.bg_color_rgb(c);
-    self
-  }
-
-  fn bold(mut self) -> Self {
-    self.text = self.text.bold();
-    self
-  }
-
-  fn italic(mut self) -> Self {
-    self.text = self.text.italic();
-    self
-  }
-
-  fn underline(mut self) -> Self {
-    self.text = self.text.underline();
-    self
-  }
-
-  fn c(mut self) -> Self {
-    self.text = self.text.c();
     self
   }
 }
@@ -436,43 +396,8 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
-  fn nl(mut self) -> Self {
-    self.text = self.text.nl();
-    self
-  }
-
-  fn space(mut self) -> Self {
-    self.text = self.text.space();
-    self
-  }
-
-  fn spaces(mut self, n: usize) -> Self {
-    self.text = self.text.spaces(n);
-    self
-  }
-
-  fn dot(mut self) -> Self {
-    self.text = self.text.dot();
-    self
-  }
-
-  fn colon(mut self) -> Self {
-    self.text = self.text.colon();
-    self
-  }
-
-  fn slash(mut self) -> Self {
-    self.text = self.text.slash();
-    self
-  }
-
-  fn backslash(mut self) -> Self {
-    self.text = self.text.backslash();
-    self
-  }
-
-  fn perc(mut self) -> Self {
-    self.text = self.text.perc();
+  fn c(mut self) -> Self {
+    self.text = self.text.c();
     self
   }
 
@@ -483,6 +408,21 @@ impl StyledText for NodeLineBuilder {
 
   fn plural<T: Display>(mut self, s: T, n: usize) -> Self {
     self.text = self.text.plural(s, n);
+    self
+  }
+
+  fn bold(mut self) -> Self {
+    self.text = self.text.bold();
+    self
+  }
+
+  fn italic(mut self) -> Self {
+    self.text = self.text.italic();
+    self
+  }
+
+  fn underline(mut self) -> Self {
+    self.text = self.text.underline();
     self
   }
 
@@ -603,26 +543,6 @@ impl StyledText for NodeLineBuilder {
 
   fn bg_color_rgb(mut self, c: RgbColor) -> Self {
     self.text = self.text.bg_color_rgb(c);
-    self
-  }
-
-  fn bold(mut self) -> Self {
-    self.text = self.text.bold();
-    self
-  }
-
-  fn italic(mut self) -> Self {
-    self.text = self.text.italic();
-    self
-  }
-
-  fn underline(mut self) -> Self {
-    self.text = self.text.underline();
-    self
-  }
-
-  fn c(mut self) -> Self {
-    self.text = self.text.c();
     self
   }
 }
