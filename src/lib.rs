@@ -8,4 +8,4 @@ mod tree;
 pub use colors::{Color, RgbColor};
 pub use mode::ColorMode;
 pub use text::{StyledText, Text};
-pub use tree::{leaf, node, TreeNode};
+pub use tree::{leaf, node, LeafBuilder, LeafLineBuilder, NodeBuilder, NodeLineBuilder, TreeNode};

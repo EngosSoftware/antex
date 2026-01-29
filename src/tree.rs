@@ -61,17 +61,23 @@ impl TreeNode {
       let last_row = pos == max_pos - 1;
       if lev.n == 1 {
         if !last_row {
+          println!("DDD: 1");
           write!(f, "{}{}{}", color, NONE, clear)?
         } else {
+          println!("DDD: 2");
           write!(f, "{}{}{}", color, EDGE, clear)?
         }
+        println!("DDD: after 1 or 2");
         second_line.push_str(&format!("{}{}{}", color, NONE, clear));
       } else {
         if !last_row {
+          println!("DDD: 3");
           write!(f, "{}{}{}", color, PIPE, clear)?
         } else {
+          println!("DDD: 4");
           write!(f, "{}{}{}", color, FORK, clear)?
         }
+        println!("DDD: after 3 or 4");
         second_line.push_str(&format!("{}{}{}", color, PIPE, clear));
       }
     }
@@ -79,7 +85,9 @@ impl TreeNode {
     match node {
       TreeNode::Node(title, children, color, cm) => {
         let mut deep = children.len();
+        println!("DDD: 5");
         writeln!(f, " {}", title)?;
+        println!("DDD: after 5");
         for node in children {
           let mut level_next = levels.clone();
           level_next.push(Level { n: deep, color: *color, cm: *cm });
@@ -90,9 +98,16 @@ impl TreeNode {
       TreeNode::Leaf(lines) => {
         for (i, line) in lines.iter().enumerate() {
           match i {
-            0 => writeln!(f, " {}", line)?,
-            _ => writeln!(f, "{} {}", second_line, line)?,
+            0 => {
+              println!("DDD: 6");
+              writeln!(f, " {}", line)?
+            }
+            _ => {
+              println!("DDD: 7");
+              writeln!(f, "{} {}", second_line, line)?
+            }
           }
+          println!("DDD: after 6 or 7");
         }
       }
     }
