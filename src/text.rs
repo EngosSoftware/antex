@@ -4,6 +4,7 @@ use std::fmt;
 use std::fmt::{Display, Write};
 use std::ops::Add;
 
+/// A trait representing styled text.
 pub trait StyledText {
   /// Adds content to text.
   fn s<T: Display>(self, s: T) -> Self;
@@ -53,9 +54,12 @@ pub trait StyledText {
   fn bg_color_rgb(self, c: RgbColor) -> Self;
 }
 
+/// Styled text.
 #[derive(Debug, Clone)]
 pub struct Text {
-  color_mode: ColorMode,
+  /// Color mode.
+  cm: ColorMode,
+  /// Text content.
   content: String,
 }
 
@@ -78,9 +82,27 @@ impl From<ColorMode> for Text {
 }
 
 impl Text {
-  pub fn new(color_mode: ColorMode) -> Self {
+  pub fn new(cm: ColorMode) -> Self {
+    Self { cm, content: String::default() }
+  }
+
+  pub fn auto() -> Self {
     Self {
-      color_mode,
+      cm: ColorMode::default(),
+      content: String::default(),
+    }
+  }
+
+  pub fn on() -> Self {
+    Self {
+      cm: ColorMode::On,
+      content: String::default(),
+    }
+  }
+
+  pub fn off() -> Self {
+    Self {
+      cm: ColorMode::Off,
       content: String::default(),
     }
   }
@@ -90,7 +112,7 @@ impl Text {
   }
 
   pub fn printc(&self) {
-    print!("{}{}", self.content, self.color_mode.clear());
+    print!("{}{}", self.content, self.cm.clear());
   }
 
   pub fn println(&self) {
@@ -98,7 +120,7 @@ impl Text {
   }
 
   pub fn printlnc(&self) {
-    println!("{}{}", self.content, self.color_mode.clear());
+    println!("{}{}", self.content, self.cm.clear());
   }
 
   pub fn eprint(&self) {
@@ -106,7 +128,7 @@ impl Text {
   }
 
   pub fn eprintc(&self) {
-    eprint!("{}{}", self.content, self.color_mode.clear());
+    eprint!("{}{}", self.content, self.cm.clear());
   }
 
   pub fn eprintln(&self) {
@@ -114,7 +136,7 @@ impl Text {
   }
 
   pub fn eprintlnc(&self) {
-    eprintln!("{}{}", self.content, self.color_mode.clear());
+    eprintln!("{}{}", self.content, self.cm.clear());
   }
 }
 
@@ -125,7 +147,7 @@ impl StyledText for Text {
   }
 
   fn c(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.clear());
+    let _ = write!(&mut self.content, "{}", self.cm.clear());
     self
   }
 
@@ -143,137 +165,137 @@ impl StyledText for Text {
   }
 
   fn bold(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bold());
+    let _ = write!(&mut self.content, "{}", self.cm.bold());
     self
   }
 
   fn italic(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.italic());
+    let _ = write!(&mut self.content, "{}", self.cm.italic());
     self
   }
 
   fn underline(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.underline());
+    let _ = write!(&mut self.content, "{}", self.cm.underline());
     self
   }
 
   fn black(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.black());
+    let _ = write!(&mut self.content, "{}", self.cm.black());
     self
   }
 
   fn red(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.red());
+    let _ = write!(&mut self.content, "{}", self.cm.red());
     self
   }
 
   fn green(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.green());
+    let _ = write!(&mut self.content, "{}", self.cm.green());
     self
   }
 
   fn yellow(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.yellow());
+    let _ = write!(&mut self.content, "{}", self.cm.yellow());
     self
   }
 
   fn blue(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.blue());
+    let _ = write!(&mut self.content, "{}", self.cm.blue());
     self
   }
 
   fn magenta(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.magenta());
+    let _ = write!(&mut self.content, "{}", self.cm.magenta());
     self
   }
 
   fn cyan(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.cyan());
+    let _ = write!(&mut self.content, "{}", self.cm.cyan());
     self
   }
 
   fn white(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.white());
+    let _ = write!(&mut self.content, "{}", self.cm.white());
     self
   }
 
   fn bg_black(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_black());
+    let _ = write!(&mut self.content, "{}", self.cm.bg_black());
     self
   }
 
   fn bg_red(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_red());
+    let _ = write!(&mut self.content, "{}", self.cm.bg_red());
     self
   }
 
   fn bg_green(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_green());
+    let _ = write!(&mut self.content, "{}", self.cm.bg_green());
     self
   }
 
   fn bg_yellow(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_yellow());
+    let _ = write!(&mut self.content, "{}", self.cm.bg_yellow());
     self
   }
 
   fn bg_blue(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_blue());
+    let _ = write!(&mut self.content, "{}", self.cm.bg_blue());
     self
   }
 
   fn bg_magenta(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_magenta());
+    let _ = write!(&mut self.content, "{}", self.cm.bg_magenta());
     self
   }
 
   fn bg_cyan(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_cyan());
+    let _ = write!(&mut self.content, "{}", self.cm.bg_cyan());
     self
   }
 
   fn bg_white(mut self) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_white());
+    let _ = write!(&mut self.content, "{}", self.cm.bg_white());
     self
   }
 
   fn color(mut self, c: Color) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.color(c));
+    let _ = write!(&mut self.content, "{}", self.cm.color(c));
     self
   }
 
   fn bg_color(mut self, c: Color) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color(c));
+    let _ = write!(&mut self.content, "{}", self.cm.bg_color(c));
     self
   }
 
   fn color_8(mut self, c: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.color_8(c));
+    let _ = write!(&mut self.content, "{}", self.cm.color_8(c));
     self
   }
 
   fn bg_color_8(mut self, c: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color_8(c));
+    let _ = write!(&mut self.content, "{}", self.cm.bg_color_8(c));
     self
   }
 
   fn color_256(mut self, c: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.color_256(c));
+    let _ = write!(&mut self.content, "{}", self.cm.color_256(c));
     self
   }
 
   fn bg_color_256(mut self, c: u8) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color_256(c));
+    let _ = write!(&mut self.content, "{}", self.cm.bg_color_256(c));
     self
   }
 
   fn color_rgb(mut self, c: RgbColor) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.color_rgb(c));
+    let _ = write!(&mut self.content, "{}", self.cm.color_rgb(c));
     self
   }
 
   fn bg_color_rgb(mut self, c: RgbColor) -> Self {
-    let _ = write!(&mut self.content, "{}", self.color_mode.bg_color_rgb(c));
+    let _ = write!(&mut self.content, "{}", self.cm.bg_color_rgb(c));
     self
   }
 }
@@ -285,9 +307,6 @@ impl Add for Text {
   fn add(self, rhs: Self) -> Self::Output {
     let mut content = self.content;
     content.push_str(&rhs.content);
-    Self {
-      color_mode: self.color_mode,
-      content,
-    }
+    Self { cm: self.cm, content }
   }
 }

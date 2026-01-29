@@ -1,24 +1,22 @@
-//! # Basic example
-//!
-//! Coloring is active in the terminal, but is inactive when redirected to another process.
+//! # Styling is always active
 //!
 //! Running this example in terminal will display colored text:
 //!
 //! ```shell
-//! cargo run --example basic
+//! cargo run --example always
 //! ```
 //!
-//! Redirecting the output to another process will cancel coloring:
+//! Redirecting the output to another process will preserve coloring:
 //!
 //! ```shell
-//! cargo run --example basic | cat
+//! cargo run --example always | cat
 //! ```
 
 use antex::{StyledText, Text};
 
 fn main() {
-  Text::auto()
-    .s("Foreground colors:\n")
+  Text::on()
+    .s("Always colored:\n")
     .black()
     .s(" 0 ")
     .red()
