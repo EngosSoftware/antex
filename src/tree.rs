@@ -21,9 +21,9 @@ struct Level {
 /// Types of nodes in styled tree.
 #[derive(Debug, Clone)]
 pub enum TreeNode {
-  /// Root or intermediary node in tree, always have one or mode child nodes.
+  /// Root or intermediary node in a tree, always has one or mode child nodes.
   Node(Text, Vec<TreeNode>, Color, ColorMode),
-  /// Leaf node in the tree, never has any child nodes.
+  /// Leaf node in a tree, never has any child nodes.
   Leaf(Vec<Text>),
 }
 
@@ -113,7 +113,7 @@ pub fn leaf(cm: ColorMode) -> LeafBuilder {
 pub struct LeafBuilder {
   /// Color mode.
   cm: ColorMode,
-  /// Multiline text in leaf node.
+  /// Multiline text in a leaf node.
   lines: Vec<Text>,
 }
 
@@ -139,7 +139,7 @@ impl LeafBuilder {
   }
 }
 
-/// Builder for [TreeNode::Leaf]'s text line.
+/// Builder for [TreeNode::Leaf]'s line.
 #[derive(Debug, Clone)]
 pub struct LeafLineBuilder {
   cm: ColorMode,
