@@ -150,7 +150,7 @@ pub struct LeafLineBuilder {
 impl LeafLineBuilder {
   pub fn end(self) -> LeafBuilder {
     let mut lines = self.lines;
-    lines.push(self.text);
+    lines.push(self.text.clear());
     LeafBuilder { cm: self.cm, lines }
   }
 }
@@ -385,7 +385,7 @@ impl NodeLineBuilder {
     NodeBuilder {
       color: self.color,
       cm: self.cm,
-      line: self.text,
+      line: self.text.clear(),
       children: self.children,
     }
   }

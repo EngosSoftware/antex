@@ -6,6 +6,7 @@ pub type RgbColor = (u8, u8, u8);
 /// Type representing a color value in several formats.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum Color {
+  None,
   Black,
   Red,
   Green,

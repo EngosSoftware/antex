@@ -62,7 +62,7 @@ const EXPECTED_INDENTED: &str = r#"
 #[test]
 fn building_tree_should_work() {
   let cm = ColorMode::Off;
-  let root = node(Color::Yellow, cm)
+  let root = node(Color::None, cm)
     .line()
     .s("node 1")
     .end()
@@ -91,7 +91,7 @@ fn building_tree_should_work() {
         .end(),
     )
     .child(
-      node(Color::Yellow, cm)
+      node(Color::None, cm)
         .line()
         .s("node 1_2")
         .end()
@@ -116,7 +116,7 @@ fn building_tree_should_work() {
         .end(),
     )
     .child(
-      node(Color::Yellow, cm)
+      node(Color::None, cm)
         .line()
         .s("node 1_3")
         .end()

@@ -132,6 +132,7 @@ impl ColorMode {
 
   pub fn color(&self, c: Color) -> String {
     match c {
+      Color::None => "".to_string(),
       Color::Black => self.color_8(0),
       Color::Red => self.color_8(1),
       Color::Green => self.color_8(2),
@@ -147,6 +148,7 @@ impl ColorMode {
 
   pub fn bg_color(&self, c: Color) -> String {
     match c {
+      Color::None => "".to_string(),
       Color::Black => self.bg_color_8(0),
       Color::Red => self.bg_color_8(1),
       Color::Green => self.bg_color_8(2),
