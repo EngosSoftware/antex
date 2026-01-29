@@ -45,9 +45,9 @@ impl From<RgbColor> for Color {
 /// Color mode to switch terminal colouring `ON` or `OFF`.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum ColorMode {
-  /// Switch colouring **on**.
+  /// Switch coloring **on**.
   On,
-  /// Switch colouring **off**.
+  /// Switch coloring **off**.
   Off,
 }
 

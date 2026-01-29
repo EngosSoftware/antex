@@ -8,8 +8,8 @@ use tree::*;
 
 fn foreground_colors_8(cm: ColorMode) {
   println!("\nForeground 8 colors:\n");
-  Text::new(cm)
-    .color(Color::Black)
+  Text::default()
+    .black()
     .s(" 0 ")
     .red()
     .s(" 1 ")
