@@ -32,7 +32,7 @@ impl From<&str> for ColorMode {
 impl From<String> for ColorMode {
   /// Creates [ColorMode] from string.
   fn from(value: String) -> Self {
-    Self::new(&value)
+    Self::new(value)
   }
 }
 
@@ -46,20 +46,20 @@ impl From<&String> for ColorMode {
 impl From<Option<String>> for ColorMode {
   /// Creates [ColorMode] from optional string.
   fn from(value: Option<String>) -> Self {
-    value.map_or(Self::default(), |s| Self::new(&s))
+    value.map_or(Self::default(), Self::new)
   }
 }
 
 impl From<Option<&String>> for ColorMode {
   /// Creates [ColorMode] from optional string reference.
   fn from(value: Option<&String>) -> Self {
-    value.map_or(Self::default(), |s| Self::new(s))
+    value.map_or(Self::default(), Self::new)
   }
 }
 
 impl ColorMode {
-  pub fn new(s: &str) -> Self {
-    match s.to_lowercase().trim() {
+  pub fn new(s: impl AsRef<str>) -> Self {
+    match s.as_ref().to_lowercase().trim() {
       "never" => Self::Off,
       "always" => Self::On,
       _ => Self::default(),
