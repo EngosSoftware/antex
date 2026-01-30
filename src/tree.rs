@@ -29,85 +29,56 @@ pub enum TreeNode {
 
 impl Display for TreeNode {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    self.write(f)
+    let indent = " ".repeat(f.width().unwrap_or_default());
+    Self::write_node(f, self, vec![], &indent)
   }
 }
 
 impl TreeNode {
-  /// Writes node to provided writer.
-  pub fn write(&self, f: &mut dyn fmt::Write) -> fmt::Result {
-    Self::write_node(f, self, vec![])
-  }
-
-  /// Writes node to provided writer with specified indentation.
-  pub fn write_indent(&self, f: &mut dyn fmt::Write, indent: usize) -> fmt::Result {
-    let mut tree = String::default();
-    Self::write_node(&mut tree, self, vec![])?;
-    let indent = " ".repeat(indent);
-    for line in tree.lines() {
-      writeln!(f, "{}{}", indent, line)?;
-    }
-    Ok(())
-  }
-
-  /// Writes node.
-  fn write_node(f: &mut dyn fmt::Write, node: &TreeNode, levels: Vec<Level>) -> fmt::Result {
-    // display lines
+  /// Writes this node to provided writer.
+  fn write_node(f: &mut dyn fmt::Write, node: &TreeNode, levels: Vec<Level>, indent: &str) -> fmt::Result {
+    // Display lines of text.
     let max_pos = levels.len();
     let mut second_line = String::new();
+    write!(f, "{}", indent)?;
     for (pos, lev) in levels.iter().enumerate() {
       let color = lev.cm.color(lev.color);
       let clear = lev.cm.clear();
       let last_row = pos == max_pos - 1;
       if lev.n == 1 {
         if !last_row {
-          println!("DDD: 1");
           write!(f, "{}{}{}", color, NONE, clear)?
         } else {
-          println!("DDD: 2");
           write!(f, "{}{}{}", color, EDGE, clear)?
         }
-        println!("DDD: after 1 or 2");
         second_line.push_str(&format!("{}{}{}", color, NONE, clear));
       } else {
         if !last_row {
-          println!("DDD: 3");
           write!(f, "{}{}{}", color, PIPE, clear)?
         } else {
-          println!("DDD: 4");
           write!(f, "{}{}{}", color, FORK, clear)?
         }
-        println!("DDD: after 3 or 4");
         second_line.push_str(&format!("{}{}{}", color, PIPE, clear));
       }
     }
-    // traverse child nodes
+    // Traverse the child nodes.
     match node {
       TreeNode::Node(title, children, color, cm) => {
         let mut deep = children.len();
-        println!("DDD: 5");
         writeln!(f, " {}", title)?;
-        println!("DDD: after 5");
         for node in children {
           let mut level_next = levels.clone();
           level_next.push(Level { n: deep, color: *color, cm: *cm });
           deep -= 1;
-          Self::write_node(f, node, level_next)?;
+          Self::write_node(f, node, level_next, indent)?;
         }
       }
       TreeNode::Leaf(lines) => {
         for (i, line) in lines.iter().enumerate() {
           match i {
-            0 => {
-              println!("DDD: 6");
-              writeln!(f, " {}", line)?
-            }
-            _ => {
-              println!("DDD: 7");
-              writeln!(f, "{} {}", second_line, line)?
-            }
+            0 => writeln!(f, " {}", line)?,
+            _ => writeln!(f, "{}{} {}", indent, second_line, line)?,
           }
-          println!("DDD: after 6 or 7");
         }
       }
     }

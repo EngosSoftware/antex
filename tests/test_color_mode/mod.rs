@@ -2,7 +2,7 @@ use antex::ColorMode;
 use std::io::IsTerminal;
 
 #[test]
-fn conversion_should_work() {
+fn color_mode_conversion_should_work() {
   let auto = if std::io::stdout().is_terminal() { "On" } else { "Off" };
 
   let cm: ColorMode = "always".into();

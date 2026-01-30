@@ -1,27 +1,35 @@
 use antex::{leaf, node, Color, ColorMode, NodeBuilder, StyledText, TreeNode};
+use std::fmt::Write;
 
 const C: Color = Color::None;
 const CM: ColorMode = ColorMode::Off;
 
 struct FailingWriter {
-  written: usize,
-  max: usize,
+  pattern: String,
 }
 
 impl FailingWriter {
-  fn new(max: usize) -> Self {
-    Self { written: 0, max }
+  fn new(pattern: impl AsRef<str>) -> Self {
+    Self {
+      pattern: pattern.as_ref().to_string(),
+    }
   }
 }
 
-impl std::fmt::Write for FailingWriter {
+impl Write for FailingWriter {
   fn write_str(&mut self, s: &str) -> std::fmt::Result {
-    if self.written + s.len() >= self.max {
-      Err(std::fmt::Error)
-    } else {
-      self.written += s.len();
-      Ok(())
+    if self.pattern == "^" {
+      return Err(std::fmt::Error);
+    } else if self.pattern.len() == 1 {
+      for ch in s.chars() {
+        if ch.to_string() == self.pattern {
+          return Err(std::fmt::Error);
+        }
+      }
+    } else if self.pattern == s {
+      return Err(std::fmt::Error);
     }
+    Ok(())
   }
 }
 
@@ -30,40 +38,30 @@ fn get_root() -> NodeBuilder {
 }
 
 fn get_leaf() -> TreeNode {
-  leaf(CM).line().s("leaf").end().line().s("line 2").end().end()
+  leaf(CM).line().s("leaf#").end().line().s("line*").end().end()
 }
 
-fn get_node(index: usize) -> NodeBuilder {
-  node(C, CM).line().s("node ").s(index).end()
+fn get_node(ch: char) -> NodeBuilder {
+  node(C, CM).line().s("node").s(ch).end()
 }
 
 fn get_tree() -> TreeNode {
   get_root()
-    .child(get_node(1).child(get_node(2).child(get_leaf()).end()).end())
-    .child(get_node(3).end())
+    .child(get_node('@').child(get_node('%').child(get_leaf()).end()).end())
+    .child(get_node('&').end())
     .end()
 }
 
 #[test]
 fn _0001() {
   let tree = get_tree();
-  tree.write(&mut FailingWriter::new(6)).expect_err("");
-  tree.write(&mut FailingWriter::new(13)).expect_err("");
-  tree.write(&mut FailingWriter::new(26)).expect_err("");
-  tree.write(&mut FailingWriter::new(33)).expect_err("");
-  tree.write(&mut FailingWriter::new(49)).expect_err("");
-  tree.write(&mut FailingWriter::new(62)).expect_err("");
-  tree.write(&mut FailingWriter::new(81)).expect_err("");
-}
-
-#[test]
-fn _0002() {
-  let tree = get_tree();
-  tree.write_indent(&mut FailingWriter::new(6), 0).expect_err("");
-  tree.write_indent(&mut FailingWriter::new(13), 0).expect_err("");
-  tree.write_indent(&mut FailingWriter::new(26), 0).expect_err("");
-  tree.write_indent(&mut FailingWriter::new(33), 0).expect_err("");
-  tree.write_indent(&mut FailingWriter::new(49), 0).expect_err("");
-  tree.write_indent(&mut FailingWriter::new(62), 0).expect_err("");
-  tree.write_indent(&mut FailingWriter::new(81), 0).expect_err("");
+  let indent = 0;
+  write!(&mut FailingWriter::new("^"), "{:width$}", tree, width = indent).unwrap_err();
+  write!(&mut FailingWriter::new("#"), "{:width$}", tree, width = indent).unwrap_err();
+  write!(&mut FailingWriter::new("*"), "{:width$}", tree, width = indent).unwrap_err();
+  write!(&mut FailingWriter::new("@"), "{:width$}", tree, width = indent).unwrap_err();
+  write!(&mut FailingWriter::new("   "), "{:width$}", tree, width = indent).unwrap_err();
+  write!(&mut FailingWriter::new(" └─"), "{:width$}", tree, width = indent).unwrap_err();
+  write!(&mut FailingWriter::new(" ├─"), "{:width$}", tree, width = indent).unwrap_err();
+  write!(&mut FailingWriter::new(" │ "), "{:width$}", tree, width = indent).unwrap_err();
 }

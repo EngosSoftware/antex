@@ -17,3 +17,12 @@ macro_rules! off {
 }
 
 use off;
+
+fn cm<'a>() -> &'a str {
+  use std::io::IsTerminal;
+  if std::io::stdout().is_terminal() {
+    "On"
+  } else {
+    "Off"
+  }
+}

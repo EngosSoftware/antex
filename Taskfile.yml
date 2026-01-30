@@ -23,25 +23,34 @@ tasks:
     desc: Generates code coverage report in text format
     cmds:
       - cmd: cargo +stable llvm-cov clean
-      - cmd: cargo +stable llvm-cov --no-cfg-coverage
+      - task: cov-extra
+      - cmd: cargo +stable llvm-cov --no-cfg-coverage --no-clean
 
   cov-html:
     desc: Generates code coverage report in HTML format
     cmds:
       - cmd: cargo +stable llvm-cov clean
-      - cmd: cargo +stable llvm-cov --no-cfg-coverage --html
+      - task: cov-extra
+      - cmd: cargo +stable llvm-cov --no-cfg-coverage --no-clean --html
 
   cov-html-open:
     desc: Generates code coverage report in HTML format
     cmds:
       - cmd: cargo +stable llvm-cov clean
-      - cmd: cargo +stable llvm-cov --no-cfg-coverage --html --open
+      - task: cov-extra
+      - cmd: cargo +stable llvm-cov --no-cfg-coverage --no-clean --html --open
 
   cov-badge:
     desc: Generates the detailed code coverage badge
     cmds:
       - cmd: cargo +stable llvm-cov clean
-      - cmd: cargo +stable llvm-cov --no-cfg-coverage --json --summary-only | coverio -l coverage -c --tag cov-badge
+      - task: cov-extra
+      - cmd: cargo +stable llvm-cov --no-cfg-coverage --no-clean --json --summary-only | coverio -l coverage -c --tag cov-badge
+
+  cov-extra:
+    desc: Executes additional test with output redirected to other process
+    cmds:
+      - cmd: cargo +stable llvm-cov test text_default_should_work --no-report | cat
 
   doc:
     desc: Generates documentation

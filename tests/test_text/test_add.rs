@@ -1,3 +1,4 @@
+use super::*;
 use antex::{ColorMode, StyledText, Text};
 
 #[test]
@@ -7,7 +8,7 @@ fn text_add_default_should_work() {
   let text = a + b;
   assert_eq!("Hello world!", text.to_string());
   assert_eq!("Hello world!", format!("{}", text));
-  assert_eq!(r#"Text { cm: On, content: "Hello world!" }"#, format!("{:?}", text));
+  assert_eq!(format!(r#"Text {{ cm: {}, content: "Hello world!" }}"#, cm()), format!("{:?}", text));
 }
 
 #[test]

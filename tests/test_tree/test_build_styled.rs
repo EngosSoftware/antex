@@ -1,5 +1,4 @@
 use antex::{leaf, node, Color, ColorMode, StyledText, Text};
-use std::fmt::Write;
 
 const EXPECTED: &str = r#"
  [30m[47mnode 1[0m
@@ -262,8 +261,5 @@ fn building_styled_tree_should_work() {
     )
     .end();
 
-  let mut output = String::new();
-  let _ = writeln!(&mut output);
-  let _ = root.write(&mut output);
-  assert_eq!(EXPECTED, output);
+  assert_eq!(EXPECTED, format!("\n{}", root));
 }

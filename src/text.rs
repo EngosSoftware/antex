@@ -106,38 +106,6 @@ impl Text {
       content: String::default(),
     }
   }
-
-  pub fn print(&self) {
-    print!("{}", self.content);
-  }
-
-  pub fn printc(&self) {
-    print!("{}{}", self.content, self.cm.clear());
-  }
-
-  pub fn println(&self) {
-    println!("{}", self.content);
-  }
-
-  pub fn printlnc(&self) {
-    println!("{}{}", self.content, self.cm.clear());
-  }
-
-  pub fn eprint(&self) {
-    eprint!("{}", self.content);
-  }
-
-  pub fn eprintc(&self) {
-    eprint!("{}{}", self.content, self.cm.clear());
-  }
-
-  pub fn eprintln(&self) {
-    eprintln!("{}", self.content);
-  }
-
-  pub fn eprintlnc(&self) {
-    eprintln!("{}{}", self.content, self.cm.clear());
-  }
 }
 
 impl StyledText for Text {

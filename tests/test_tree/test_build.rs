@@ -1,5 +1,4 @@
 use antex::{leaf, node, Color, ColorMode, StyledText};
-use std::fmt::Write;
 
 const EXPECTED: &str = r#"
  node 1
@@ -165,14 +164,6 @@ fn building_tree_should_work() {
     )
     .end();
 
-  let mut output = String::new();
-  let _ = writeln!(&mut output);
-  let _ = root.write(&mut output);
-  assert_eq!(EXPECTED, output);
   assert_eq!(EXPECTED, format!("\n{}", root));
-
-  let mut indented = String::new();
-  let _ = writeln!(&mut indented);
-  let _ = root.write_indent(&mut indented, 5);
-  assert_eq!(EXPECTED_INDENTED, indented);
+  assert_eq!(EXPECTED_INDENTED, format!("\n{:5}", root));
 }
