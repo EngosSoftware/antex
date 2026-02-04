@@ -278,3 +278,15 @@ impl Add for Text {
     Self { cm: self.cm, content }
   }
 }
+
+pub fn auto() -> Text {
+  Text::auto()
+}
+
+pub fn always() -> Text {
+  Text::on()
+}
+
+pub fn never() -> Text {
+  Text::off()
+}

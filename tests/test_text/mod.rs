@@ -1,15 +1,22 @@
 use super::*;
+use antex::{always, auto, never, ColorMode, StyledText, Text};
 
 mod test_add;
 mod test_characters;
 mod test_colors;
 mod test_formatting;
 
-use antex::{ColorMode, StyledText, Text};
-
 #[test]
 fn text_default_should_work() {
   let text = Text::default().s("Hello");
+  assert_eq!("Hello", text.to_string());
+  assert_eq!("Hello", format!("{}", text));
+  assert_eq!(format!(r#"Text {{ cm: {}, content: "Hello" }}"#, cm()), format!("{:?}", text));
+}
+
+#[test]
+fn text_auto_should_work() {
+  let text = auto().s("Hello");
   assert_eq!("Hello", text.to_string());
   assert_eq!("Hello", format!("{}", text));
   assert_eq!(format!(r#"Text {{ cm: {}, content: "Hello" }}"#, cm()), format!("{:?}", text));
@@ -35,6 +42,15 @@ fn text_off_should_work() {
 }
 
 #[test]
+fn text_never_should_work() {
+  let text = never().s("Hello");
+  assert_eq!("Hello", text.to_string());
+  assert_eq!("Hello", format!("{}", text));
+  assert_eq!(r#"Text { cm: Off, content: "Hello" }"#, format!("{:?}", text));
+  assert_eq!(r#"Text { cm: Off, content: "" }"#, format!("{:?}", Text::off()));
+}
+
+#[test]
 fn text_from_cm_off_should_work() {
   let mut text: Text = ColorMode::Off.into();
   text = text.s("Hello");
@@ -47,6 +63,15 @@ fn text_from_cm_off_should_work() {
 #[test]
 fn text_on_should_work() {
   let text = Text::new(ColorMode::On).s("Hello");
+  assert_eq!("Hello", text.to_string());
+  assert_eq!("Hello", format!("{}", text));
+  assert_eq!(r#"Text { cm: On, content: "Hello" }"#, format!("{:?}", text));
+  assert_eq!(r#"Text { cm: On, content: "" }"#, format!("{:?}", Text::on()));
+}
+
+#[test]
+fn text_always_should_work() {
+  let text = always().s("Hello");
   assert_eq!("Hello", text.to_string());
   assert_eq!("Hello", format!("{}", text));
   assert_eq!(r#"Text { cm: On, content: "Hello" }"#, format!("{:?}", text));
