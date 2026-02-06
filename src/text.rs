@@ -1,15 +1,15 @@
 use crate::colors::{Color, RgbColor};
 use crate::mode::ColorMode;
 use std::fmt;
-use std::fmt::{Display, Write};
+use std::fmt::{Alignment, Display, Write};
 use std::ops::Add;
 
 /// A trait representing styled text.
 pub trait StyledText {
   /// Adds content to text.
   fn s<T: Display>(self, s: T) -> Self;
-  /// Clears all styling flags.
-  fn clear(self) -> Self;
+  /// Resets (clears) all styling flags.
+  fn normal(self) -> Self;
   /// Adds repeated content to text.
   fn repeat<T: Display>(self, s: T, n: usize) -> Self;
   /// Adds -s suffix to the content when the number is not 1.
@@ -61,11 +61,27 @@ pub struct Text {
   cm: ColorMode,
   /// Text content.
   content: String,
+  /// Text length.
+  length: usize,
 }
 
 impl Display for Text {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    write!(f, "{}", self.content)
+    if let Some(width) = f.width() {
+      let fill = width.saturating_sub(self.length);
+      let ch = f.fill().to_string();
+      if let Some(align) = f.align() {
+        match align {
+          Alignment::Left => write!(f, "{}{}", self.content, ch.repeat(fill)),
+          Alignment::Right => write!(f, "{}{}", ch.repeat(fill), self.content),
+          Alignment::Center => write!(f, "{}{}{}", ch.repeat(fill / 2), self.content, ch.repeat(fill - fill / 2)),
+        }
+      } else {
+        write!(f, "{}{}", self.content, ch.repeat(fill))
+      }
+    } else {
+      write!(f, "{}", self.content)
+    }
   }
 }
 
@@ -83,13 +99,18 @@ impl From<ColorMode> for Text {
 
 impl Text {
   pub fn new(cm: ColorMode) -> Self {
-    Self { cm, content: String::default() }
+    Self {
+      cm,
+      content: String::default(),
+      length: 0,
+    }
   }
 
   pub fn auto() -> Self {
     Self {
       cm: ColorMode::default(),
       content: String::default(),
+      length: 0,
     }
   }
 
@@ -97,6 +118,7 @@ impl Text {
     Self {
       cm: ColorMode::On,
       content: String::default(),
+      length: 0,
     }
   }
 
@@ -104,17 +126,20 @@ impl Text {
     Self {
       cm: ColorMode::Off,
       content: String::default(),
+      length: 0,
     }
   }
 }
 
 impl StyledText for Text {
   fn s<T: Display>(mut self, s: T) -> Self {
+    let length = self.content.len();
     let _ = write!(&mut self.content, "{}", s);
+    self.length += self.content.len() - length;
     self
   }
 
-  fn clear(mut self) -> Self {
+  fn normal(mut self) -> Self {
     let _ = write!(&mut self.content, "{}", self.cm.clear());
     self
   }
@@ -275,7 +300,11 @@ impl Add for Text {
   fn add(self, rhs: Self) -> Self::Output {
     let mut content = self.content;
     content.push_str(&rhs.content);
-    Self { cm: self.cm, content }
+    Self {
+      cm: self.cm,
+      content,
+      length: self.length + rhs.length,
+    }
   }
 }
 

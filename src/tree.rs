@@ -136,7 +136,7 @@ pub struct LeafLineBuilder {
 impl LeafLineBuilder {
   pub fn end(self) -> LeafBuilder {
     let mut lines = self.lines;
-    lines.push(self.text.clear());
+    lines.push(self.text.normal());
     LeafBuilder { cm: self.cm, lines }
   }
 }
@@ -147,8 +147,8 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
-  fn clear(mut self) -> Self {
-    self.text = self.text.clear();
+  fn normal(mut self) -> Self {
+    self.text = self.text.normal();
     self
   }
 
@@ -371,7 +371,7 @@ impl NodeLineBuilder {
     NodeBuilder {
       color: self.color,
       cm: self.cm,
-      line: self.text.clear(),
+      line: self.text.normal(),
       children: self.children,
     }
   }
@@ -383,8 +383,8 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
-  fn clear(mut self) -> Self {
-    self.text = self.text.clear();
+  fn normal(mut self) -> Self {
+    self.text = self.text.normal();
     self
   }
 
