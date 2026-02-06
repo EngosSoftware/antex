@@ -84,7 +84,7 @@ fn building_styled_tree_should_work() {
         .s("K")
         .bg_color(Color::Cyan)
         .s("L")
-        .clear()
+        .normal()
         .s("M")
         .end()
         .child(leaf_node.end())
@@ -117,7 +117,7 @@ fn building_styled_tree_should_work() {
             .s("n")
             .bg_color(Color::Cyan)
             .s("e")
-            .clear()
+            .normal()
             .s(".")
             .end()
             .end(),
@@ -186,7 +186,7 @@ fn building_styled_tree_should_work() {
             .s("k")
             .color(Color::Yellow)
             .s("l")
-            .clear()
+            .normal()
             .s("m")
             .end()
             .child(
@@ -252,7 +252,7 @@ fn building_styled_tree_should_work() {
             .color(Color::Yellow)
             .s("n")
             .s("e")
-            .clear()
+            .normal()
             .plural(" with multiple character", 100)
             .end()
             .end(),
