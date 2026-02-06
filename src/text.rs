@@ -1,7 +1,7 @@
 use crate::colors::{Color, RgbColor};
 use crate::mode::ColorMode;
 use std::fmt;
-use std::fmt::{Display, Write};
+use std::fmt::{Alignment, Display, Write};
 use std::ops::Add;
 
 /// A trait representing styled text.
@@ -67,7 +67,21 @@ pub struct Text {
 
 impl Display for Text {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    write!(f, "{}", self.content)
+    if let Some(width) = f.width() {
+      let fill = width.saturating_sub(self.length);
+      let ch = f.fill().to_string();
+      if let Some(align) = f.align() {
+        match align {
+          Alignment::Left => write!(f, "{}{}", self.content, ch.repeat(fill)),
+          Alignment::Right => write!(f, "{}{}", ch.repeat(fill), self.content),
+          Alignment::Center => write!(f, "{}{}{}", ch.repeat(fill / 2), self.content, ch.repeat(fill - fill / 2)),
+        }
+      } else {
+        write!(f, "{}{}", self.content, ch.repeat(fill))
+      }
+    } else {
+      write!(f, "{}", self.content)
+    }
   }
 }
 
