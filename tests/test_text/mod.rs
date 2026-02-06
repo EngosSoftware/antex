@@ -1,10 +1,11 @@
 use super::*;
 use antex::{always, auto, never, ColorMode, StyledText, Text};
 
-mod test_add;
-mod test_characters;
-mod test_colors;
-mod test_formatting;
+mod add;
+mod characters;
+mod colors;
+mod format;
+mod formatting;
 
 #[test]
 fn text_default_should_work() {
