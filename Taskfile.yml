@@ -67,6 +67,24 @@ tasks:
     cmds:
       - cmd: cargo +nightly fmt
 
+  manual:
+    desc: Builds the manual from its markdown files
+    cmds:
+      - cmd: cd manual && mdbook build
+
+  readme:
+    desc: Regenerates README.md file
+    cmds:
+      - cmd: magg readme docs/README.md
+      - task: cov-badge
+
+  serve:
+    desc: Serves the manual locally and rebuilds on changes
+    silent: true
+    ignore_error: true
+    cmds:
+      - cmd: cd manual && mdbook serve || true
+
   test:
     desc: Runs tests in debug mode
     cmds:
