@@ -14,7 +14,7 @@
 
 [crates-badge]: https://img.shields.io/crates/v/antex.svg
 [crates-url]: https://crates.io/crates/antex
-[cov-badge]: https://img.shields.io/badge/coverage-0%25-21b577.svg
+[cov-badge]: https://img.shields.io/badge/coverage-100%25-21b577.svg
 [cov-url]: https://crates.io/crates/coverio
 [build-badge-linux]: https://github.com/EngosSoftware/antex/actions/workflows/build-linux.yml/badge.svg
 [build-badge-windows]: https://github.com/EngosSoftware/antex/actions/workflows/build-windows.yml/badge.svg
