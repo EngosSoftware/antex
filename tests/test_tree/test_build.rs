@@ -1,4 +1,4 @@
-use antex::{leaf, node, Color, ColorMode, StyledText};
+use antex::{Color, ColorMode, StyledText, leaf, node};
 
 const EXPECTED: &str = r#"
  node 1

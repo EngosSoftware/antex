@@ -12,7 +12,8 @@ tasks:
   clean:
     desc: Cleans all targets
     cmds:
-      - cmd: cargo clean
+      - cmd: cargo +stable clean
+      - cmd: rm -rf manual/book
 
   clippy:
     desc: Runs clippy for all targets

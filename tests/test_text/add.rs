@@ -8,7 +8,7 @@ fn text_add_default_should_work() {
   let text = a + b;
   assert_eq!("Hello world!", text.to_string());
   assert_eq!("Hello world!", format!("{}", text));
-  assert_eq!(format!(r#"Text {{ cm: {}, content: "Hello world!", length: 12 }}"#, cm()), format!("{:?}", text));
+  assert_eq!(format!(r#"Text {{ cm: {}, content: "Hello world!", chars: 12 }}"#, cm()), format!("{:?}", text));
 }
 
 #[test]
@@ -18,7 +18,7 @@ fn text_add_off_should_work() {
   let text = a + b;
   assert_eq!("Hello world!", text.to_string());
   assert_eq!("Hello world!", format!("{}", text));
-  assert_eq!(r#"Text { cm: Off, content: "Hello world!", length: 12 }"#, format!("{:?}", text));
+  assert_eq!(r#"Text { cm: Off, content: "Hello world!", chars: 12 }"#, format!("{:?}", text));
 }
 
 #[test]
@@ -28,7 +28,7 @@ fn text_add_on_should_work() {
   let text = a + b;
   assert_eq!("Hello world!", text.to_string());
   assert_eq!("Hello world!", format!("{}", text));
-  assert_eq!(r#"Text { cm: On, content: "Hello world!", length: 12 }"#, format!("{:?}", text));
+  assert_eq!(r#"Text { cm: On, content: "Hello world!", chars: 12 }"#, format!("{:?}", text));
 }
 
 #[test]
@@ -36,17 +36,64 @@ fn text_add_on_coloured_should_work() {
   let a = Text::new(ColorMode::On).yellow().s("Hello");
   let b = Text::new(ColorMode::On).green().s(" world!");
   let text = a + b;
-  assert_eq!("\u{1b}[33mHello\u{1b}[32m world!", text.to_string());
-  assert_eq!("\u{1b}[33mHello\u{1b}[32m world!", format!("{}", text));
-  assert_eq!(r#"Text { cm: On, content: "\u{1b}[33mHello\u{1b}[32m world!", length: 12 }"#, format!("{:?}", text));
+  assert_eq!("\x1b[33mHello\x1b[32m world!", text.to_string());
+  assert_eq!("\x1b[33mHello\x1b[32m world!", format!("{}", text));
+  assert_eq!(r#"Text { cm: On, content: "\u{1b}[33mHello\u{1b}[32m world!", chars: 12 }"#, format!("{:?}", text));
 }
 
 #[test]
 fn text_add_on_coloured_clear_should_work() {
-  let a = Text::new(ColorMode::On).yellow().s("Hello").normal();
+  let a = Text::new(ColorMode::On).yellow().s("Hello").reset();
   let b = Text::new(ColorMode::On).s(" world!");
   let text = a + b;
-  assert_eq!("\u{1b}[33mHello\u{1b}[0m world!", text.to_string());
-  assert_eq!("\u{1b}[33mHello\u{1b}[0m world!", format!("{}", text));
-  assert_eq!(r#"Text { cm: On, content: "\u{1b}[33mHello\u{1b}[0m world!", length: 12 }"#, format!("{:?}", text));
+  assert_eq!("\x1b[33mHello\x1b[0m world!", text.to_string());
+  assert_eq!("\x1b[33mHello\x1b[0m world!", format!("{}", text));
+  assert_eq!(r#"Text { cm: On, content: "\u{1b}[33mHello\u{1b}[0m world!", chars: 12 }"#, format!("{:?}", text));
+}
+
+/// Text + Text
+/// Text + &Text
+/// Text + &str
+/// &str + Text
+/// &str + &Text
+#[test]
+fn adding_multiple_types_should_work() {
+  let a = never().s("hello");
+  let b = never().s("world");
+  let c = "!";
+  let d = "!".to_string();
+  let e = "☺";
+
+  let greeting = a.clone() + b.clone();
+  assert_eq!("helloworld", greeting.to_string());
+
+  let greeting = a.clone() + &b;
+  assert_eq!("helloworld", greeting.to_string());
+
+  let greeting = a.clone() + c;
+  assert_eq!("hello!", greeting.to_string());
+
+  let greeting = a.clone() + d.as_str();
+  assert_eq!("hello!", greeting.to_string());
+
+  let greeting = a.clone() + " " + b.clone() + c;
+  assert_eq!("hello world!", greeting.to_string());
+
+  let greeting = a.clone() + " " + &b + d.as_str();
+  assert_eq!("hello world!", greeting.to_string());
+
+  let greeting = c + &a;
+  assert_eq!("!hello", greeting.to_string());
+
+  let greeting = d.as_str() + &a;
+  assert_eq!("!hello", greeting.to_string());
+
+  let greeting = c + a.clone();
+  assert_eq!("!hello", greeting.to_string());
+
+  let greeting = d.as_str() + a.clone();
+  assert_eq!("!hello", greeting.to_string());
+
+  let greeting = e + a;
+  assert_eq!("☺hello", greeting.to_string());
 }

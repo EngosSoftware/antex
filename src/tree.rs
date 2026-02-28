@@ -3,8 +3,7 @@
 use crate::colors::{Color, RgbColor};
 use crate::mode::ColorMode;
 use crate::text::{StyledText, Text};
-use std::fmt;
-use std::fmt::Display;
+use std::fmt::{self, Display, Write};
 
 const NONE: &str = "   ";
 const EDGE: &str = " └─";
@@ -30,20 +29,20 @@ pub enum TreeNode {
 impl Display for TreeNode {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     let indent = " ".repeat(f.width().unwrap_or_default());
-    Self::write_node(f, self, vec![], &indent)
+    Self::write_node(f, self, &mut vec![], &indent)
   }
 }
 
 impl TreeNode {
   /// Writes this node to provided writer.
-  fn write_node(f: &mut dyn fmt::Write, node: &TreeNode, levels: Vec<Level>, indent: &str) -> fmt::Result {
+  fn write_node(f: &mut dyn Write, node: &TreeNode, levels: &mut Vec<Level>, indent: &str) -> fmt::Result {
     // Display lines of text.
     let max_pos = levels.len();
     let mut second_line = String::new();
     write!(f, "{}", indent)?;
     for (pos, lev) in levels.iter().enumerate() {
-      let color = lev.cm.color(lev.color);
-      let clear = lev.cm.clear();
+      let color = lev.cm.color(lev.color, false);
+      let clear = lev.cm.reset();
       let last_row = pos == max_pos - 1;
       if lev.n == 1 {
         if !last_row {
@@ -51,14 +50,14 @@ impl TreeNode {
         } else {
           write!(f, "{}{}{}", color, EDGE, clear)?
         }
-        second_line.push_str(&format!("{}{}{}", color, NONE, clear));
+        _ = write!(&mut second_line, "{}{}{}", color, NONE, clear);
       } else {
         if !last_row {
           write!(f, "{}{}{}", color, PIPE, clear)?
         } else {
           write!(f, "{}{}{}", color, FORK, clear)?
         }
-        second_line.push_str(&format!("{}{}{}", color, PIPE, clear));
+        _ = write!(&mut second_line, "{}{}{}", color, PIPE, clear);
       }
     }
     // Traverse the child nodes.
@@ -67,10 +66,10 @@ impl TreeNode {
         let mut deep = children.len();
         writeln!(f, " {}", title)?;
         for node in children {
-          let mut level_next = levels.clone();
-          level_next.push(Level { n: deep, color: *color, cm: *cm });
+          levels.push(Level { n: deep, color: *color, cm: *cm });
           deep -= 1;
-          Self::write_node(f, node, level_next, indent)?;
+          Self::write_node(f, node, levels, indent)?;
+          levels.pop();
         }
       }
       TreeNode::Leaf(lines) => {
@@ -136,7 +135,7 @@ pub struct LeafLineBuilder {
 impl LeafLineBuilder {
   pub fn end(self) -> LeafBuilder {
     let mut lines = self.lines;
-    lines.push(self.text.normal());
+    lines.push(self.text.reset());
     LeafBuilder { cm: self.cm, lines }
   }
 }
@@ -147,8 +146,8 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
-  fn normal(mut self) -> Self {
-    self.text = self.text.normal();
+  fn reset(mut self) -> Self {
+    self.text = self.text.reset();
     self
   }
 
@@ -182,8 +181,18 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
+  fn bright_black(mut self) -> Self {
+    self.text = self.text.bright_black();
+    self
+  }
+
   fn red(mut self) -> Self {
     self.text = self.text.red();
+    self
+  }
+
+  fn bright_red(mut self) -> Self {
+    self.text = self.text.bright_red();
     self
   }
 
@@ -192,8 +201,18 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
+  fn bright_green(mut self) -> Self {
+    self.text = self.text.bright_green();
+    self
+  }
+
   fn yellow(mut self) -> Self {
     self.text = self.text.yellow();
+    self
+  }
+
+  fn bright_yellow(mut self) -> Self {
+    self.text = self.text.bright_yellow();
     self
   }
 
@@ -202,8 +221,18 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
+  fn bright_blue(mut self) -> Self {
+    self.text = self.text.bright_blue();
+    self
+  }
+
   fn magenta(mut self) -> Self {
     self.text = self.text.magenta();
+    self
+  }
+
+  fn bright_magenta(mut self) -> Self {
+    self.text = self.text.bright_magenta();
     self
   }
 
@@ -212,8 +241,18 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
+  fn bright_cyan(mut self) -> Self {
+    self.text = self.text.bright_cyan();
+    self
+  }
+
   fn white(mut self) -> Self {
     self.text = self.text.white();
+    self
+  }
+
+  fn bright_white(mut self) -> Self {
+    self.text = self.text.bright_white();
     self
   }
 
@@ -222,8 +261,18 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
+  fn bg_bright_black(mut self) -> Self {
+    self.text = self.text.bg_bright_black();
+    self
+  }
+
   fn bg_red(mut self) -> Self {
     self.text = self.text.bg_red();
+    self
+  }
+
+  fn bg_bright_red(mut self) -> Self {
+    self.text = self.text.bg_bright_red();
     self
   }
 
@@ -232,8 +281,18 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
+  fn bg_bright_green(mut self) -> Self {
+    self.text = self.text.bg_bright_green();
+    self
+  }
+
   fn bg_yellow(mut self) -> Self {
     self.text = self.text.bg_yellow();
+    self
+  }
+
+  fn bg_bright_yellow(mut self) -> Self {
+    self.text = self.text.bg_bright_yellow();
     self
   }
 
@@ -242,8 +301,18 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
+  fn bg_bright_blue(mut self) -> Self {
+    self.text = self.text.bg_bright_blue();
+    self
+  }
+
   fn bg_magenta(mut self) -> Self {
     self.text = self.text.bg_magenta();
+    self
+  }
+
+  fn bg_bright_magenta(mut self) -> Self {
+    self.text = self.text.bg_bright_magenta();
     self
   }
 
@@ -252,8 +321,18 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
+  fn bg_bright_cyan(mut self) -> Self {
+    self.text = self.text.bg_bright_cyan();
+    self
+  }
+
   fn bg_white(mut self) -> Self {
     self.text = self.text.bg_white();
+    self
+  }
+
+  fn bg_bright_white(mut self) -> Self {
+    self.text = self.text.bg_bright_white();
     self
   }
 
@@ -262,8 +341,18 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
+  fn bright_color(mut self, c: Color) -> Self {
+    self.text = self.text.bright_color(c);
+    self
+  }
+
   fn bg_color(mut self, c: Color) -> Self {
     self.text = self.text.bg_color(c);
+    self
+  }
+
+  fn bg_bright_color(mut self, c: Color) -> Self {
+    self.text = self.text.bg_bright_color(c);
     self
   }
 
@@ -272,8 +361,18 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
+  fn bright_color_8(mut self, c: u8) -> Self {
+    self.text = self.text.bright_color_8(c);
+    self
+  }
+
   fn bg_color_8(mut self, c: u8) -> Self {
     self.text = self.text.bg_color_8(c);
+    self
+  }
+
+  fn bg_bright_color_8(mut self, c: u8) -> Self {
+    self.text = self.text.bg_bright_color_8(c);
     self
   }
 
@@ -371,7 +470,7 @@ impl NodeLineBuilder {
     NodeBuilder {
       color: self.color,
       cm: self.cm,
-      line: self.text.normal(),
+      line: self.text.reset(),
       children: self.children,
     }
   }
@@ -383,8 +482,8 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
-  fn normal(mut self) -> Self {
-    self.text = self.text.normal();
+  fn reset(mut self) -> Self {
+    self.text = self.text.reset();
     self
   }
 
@@ -418,8 +517,18 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
+  fn bright_black(mut self) -> Self {
+    self.text = self.text.bright_black();
+    self
+  }
+
   fn red(mut self) -> Self {
     self.text = self.text.red();
+    self
+  }
+
+  fn bright_red(mut self) -> Self {
+    self.text = self.text.bright_red();
     self
   }
 
@@ -428,8 +537,18 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
+  fn bright_green(mut self) -> Self {
+    self.text = self.text.bright_green();
+    self
+  }
+
   fn yellow(mut self) -> Self {
     self.text = self.text.yellow();
+    self
+  }
+
+  fn bright_yellow(mut self) -> Self {
+    self.text = self.text.bright_yellow();
     self
   }
 
@@ -438,8 +557,18 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
+  fn bright_blue(mut self) -> Self {
+    self.text = self.text.bright_blue();
+    self
+  }
+
   fn magenta(mut self) -> Self {
     self.text = self.text.magenta();
+    self
+  }
+
+  fn bright_magenta(mut self) -> Self {
+    self.text = self.text.bright_magenta();
     self
   }
 
@@ -448,8 +577,18 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
+  fn bright_cyan(mut self) -> Self {
+    self.text = self.text.bright_cyan();
+    self
+  }
+
   fn white(mut self) -> Self {
     self.text = self.text.white();
+    self
+  }
+
+  fn bright_white(mut self) -> Self {
+    self.text = self.text.bright_white();
     self
   }
 
@@ -458,8 +597,18 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
+  fn bg_bright_black(mut self) -> Self {
+    self.text = self.text.bg_bright_black();
+    self
+  }
+
   fn bg_red(mut self) -> Self {
     self.text = self.text.bg_red();
+    self
+  }
+
+  fn bg_bright_red(mut self) -> Self {
+    self.text = self.text.bg_bright_red();
     self
   }
 
@@ -468,8 +617,18 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
+  fn bg_bright_green(mut self) -> Self {
+    self.text = self.text.bg_bright_green();
+    self
+  }
+
   fn bg_yellow(mut self) -> Self {
     self.text = self.text.bg_yellow();
+    self
+  }
+
+  fn bg_bright_yellow(mut self) -> Self {
+    self.text = self.text.bg_bright_yellow();
     self
   }
 
@@ -478,8 +637,18 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
+  fn bg_bright_blue(mut self) -> Self {
+    self.text = self.text.bg_bright_blue();
+    self
+  }
+
   fn bg_magenta(mut self) -> Self {
     self.text = self.text.bg_magenta();
+    self
+  }
+
+  fn bg_bright_magenta(mut self) -> Self {
+    self.text = self.text.bg_bright_magenta();
     self
   }
 
@@ -488,8 +657,18 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
+  fn bg_bright_cyan(mut self) -> Self {
+    self.text = self.text.bg_bright_cyan();
+    self
+  }
+
   fn bg_white(mut self) -> Self {
     self.text = self.text.bg_white();
+    self
+  }
+
+  fn bg_bright_white(mut self) -> Self {
+    self.text = self.text.bg_bright_white();
     self
   }
 
@@ -498,8 +677,18 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
+  fn bright_color(mut self, c: Color) -> Self {
+    self.text = self.text.bright_color(c);
+    self
+  }
+
   fn bg_color(mut self, c: Color) -> Self {
     self.text = self.text.bg_color(c);
+    self
+  }
+
+  fn bg_bright_color(mut self, c: Color) -> Self {
+    self.text = self.text.bg_bright_color(c);
     self
   }
 
@@ -508,8 +697,18 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
+  fn bright_color_8(mut self, c: u8) -> Self {
+    self.text = self.text.bright_color_8(c);
+    self
+  }
+
   fn bg_color_8(mut self, c: u8) -> Self {
     self.text = self.text.bg_color_8(c);
+    self
+  }
+
+  fn bg_bright_color_8(mut self, c: u8) -> Self {
+    self.text = self.text.bg_bright_color_8(c);
     self
   }
 

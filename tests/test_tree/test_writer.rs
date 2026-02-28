@@ -1,4 +1,4 @@
-use antex::{leaf, node, Color, ColorMode, NodeBuilder, StyledText, TreeNode};
+use antex::{Color, ColorMode, NodeBuilder, StyledText, TreeNode, leaf, node};
 use std::fmt::Write;
 
 const C: Color = Color::None;

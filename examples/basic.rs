@@ -37,6 +37,6 @@ fn main() {
       .s(" 6 ")
       .white()
       .s(" 7 ")
-      .normal()
+      .reset()
   );
 }

@@ -3,7 +3,7 @@
 ## Overview
 
 **antex** is a lightweight Rust library for building styled text and hierarchical tree structures in terminal applications.
-It provides simple, expressive tools for formatting text with colors and styles, and for rendering clean,
+**antex** provides simple, expressive tools for formatting text with colors and styles, and for rendering clean,
 readable tree views in command-line interfaces.
 **antex** is perfect for developer tools that leverage rich, colored terminal output to improve clarity,
 structure, and user experience, without pulling in heavy UI frameworks.
@@ -22,9 +22,9 @@ use antex::{StyledText, Text};
 
 fn main() {
   let greeting = Text::auto().yellow().s("Hello")
-                             .normal().s(' ')
+                             .reset().s(' ')
                              .green().s("world")
-                             .normal().s('!');
+                             .reset().s('!');
   println!("{}", greeting);
 }
 ```

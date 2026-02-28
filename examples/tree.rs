@@ -1,4 +1,4 @@
-use antex::{leaf, node, Color, ColorMode, StyledText};
+use antex::{Color, ColorMode, StyledText, leaf, node};
 
 fn main() {
   // Collect the command-line arguments.
