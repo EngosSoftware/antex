@@ -5,9 +5,16 @@ use std::fmt::{Alignment, Debug, Display};
 use std::ops::{Add, AddAssign};
 
 /// A trait representing styled text.
-pub trait StyledText {
+pub trait StyledText: Sized {
   /// Adds content to text.
   fn s<T: Display>(self, s: T) -> Self;
+
+  /// Resets all styling and then appends formatted content.
+  ///
+  /// This is equivalent to calling `text.reset().s(value)`.
+  fn r<T: Display>(self, s: T) -> Self {
+    self.reset().s(s)
+  }
   /// Resets all colors and styling flags.
   fn reset(self) -> Self;
   /// Adds repeated content to text.
