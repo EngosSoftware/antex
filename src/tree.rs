@@ -161,6 +161,47 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
+  fn indent<T: Display>(self, indent: usize, s: T) -> Self {
+    self.pad(' ', indent, s)
+  }
+
+  fn align_left<T: Display>(self, s: T, width: usize) -> Self {
+    self.pad_right(' ', s, width)
+  }
+
+  fn align_right<T: Display>(self, s: T, width: usize) -> Self {
+    self.pad_left(' ', s, width)
+  }
+
+  fn align_center<T: Display>(self, s: T, width: usize) -> Self {
+    self.pad_center(' ', s, width)
+  }
+
+  fn pad<T: Display>(mut self, ch: char, padding: usize, s: T) -> Self {
+    self.text = self.text.pad(ch, padding, s);
+    self
+  }
+
+  fn pad_left<T: Display>(mut self, ch: char, s: T, width: usize) -> Self {
+    self.text = self.text.pad_left(ch, s, width);
+    self
+  }
+
+  fn pad_right<T: Display>(mut self, ch: char, s: T, width: usize) -> Self {
+    self.text = self.text.pad_right(ch, s, width);
+    self
+  }
+
+  fn pad_center<T: Display>(mut self, ch: char, s: T, width: usize) -> Self {
+    self.text = self.text.pad_center(ch, s, width);
+    self
+  }
+
+  fn choose<T: Display>(mut self, condition: bool, when_true: T, when_false: T) -> Self {
+    self.text = self.text.choose(condition, when_true, when_false);
+    self
+  }
+
   fn bold(mut self) -> Self {
     self.text = self.text.bold();
     self
@@ -494,6 +535,47 @@ impl StyledText for NodeLineBuilder {
 
   fn plural<T: Display>(mut self, s: T, n: usize) -> Self {
     self.text = self.text.plural(s, n);
+    self
+  }
+
+  fn indent<T: Display>(self, indent: usize, s: T) -> Self {
+    self.pad(' ', indent, s)
+  }
+
+  fn align_left<T: Display>(self, s: T, width: usize) -> Self {
+    self.pad_right(' ', s, width)
+  }
+
+  fn align_right<T: Display>(self, s: T, width: usize) -> Self {
+    self.pad_left(' ', s, width)
+  }
+
+  fn align_center<T: Display>(self, s: T, width: usize) -> Self {
+    self.pad_center(' ', s, width)
+  }
+
+  fn pad<T: Display>(mut self, ch: char, padding: usize, s: T) -> Self {
+    self.text = self.text.pad(ch, padding, s);
+    self
+  }
+
+  fn pad_left<T: Display>(mut self, ch: char, s: T, width: usize) -> Self {
+    self.text = self.text.pad_left(ch, s, width);
+    self
+  }
+
+  fn pad_right<T: Display>(mut self, ch: char, s: T, width: usize) -> Self {
+    self.text = self.text.pad_right(ch, s, width);
+    self
+  }
+
+  fn pad_center<T: Display>(mut self, ch: char, s: T, width: usize) -> Self {
+    self.text = self.text.pad_center(ch, s, width);
+    self
+  }
+
+  fn choose<T: Display>(mut self, condition: bool, when_true: T, when_false: T) -> Self {
+    self.text = self.text.choose(condition, when_true, when_false);
     self
   }
 

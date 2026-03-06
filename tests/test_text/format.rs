@@ -13,6 +13,10 @@ fn text_repeat() -> Text {
   always().blue().repeat("☺", 3).reset()
 }
 
+fn text_long() -> Text {
+  always().repeat("AbcD☺fGhiJ", 3)
+}
+
 #[test]
 fn width_should_work() {
   assert_eq!("\x1b[34mHello\x1b[0m ☺ \x1b[33mworld \x1b[35m1.999\x1b[0m           ", format!("{:30}", text()));
@@ -123,4 +127,15 @@ fn align_right_fill_repeat_should_work() {
 #[test]
 fn align_center_fill_repeat_should_work() {
   assert_eq!("-------------\x1b[34m☺☺☺\x1b[0m--------------", format!("{:-^30}", text_repeat()));
+}
+
+#[test]
+fn longer_text_than_width_should_work() {
+  assert_eq!("AbcD☺fGhiJ", format!("{:10}", text_long()));
+  assert_eq!("AbcD☺fGhiJ", format!("{:<10}", text_long()));
+  assert_eq!("AbcD☺fGhiJ", format!("{:>10}", text_long()));
+  assert_eq!("AbcD☺fGhiJ", format!("{:^10}", text_long()));
+  assert_eq!("AbcD☺fGhiJ", format!("{:-<10}", text_long()));
+  assert_eq!("AbcD☺fGhiJ", format!("{:->10}", text_long()));
+  assert_eq!("AbcD☺fGhiJ", format!("{:-^10}", text_long()));
 }
