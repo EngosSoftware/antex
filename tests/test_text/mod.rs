@@ -5,6 +5,7 @@ mod align;
 mod characters;
 mod choose;
 mod colors;
+mod filling;
 mod format;
 mod formatting;
 mod padding;

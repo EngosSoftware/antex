@@ -1,6 +1,6 @@
 [package]
 name = "antex"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Dariusz Depta <depta@engos.de>"]
 description = "Styled text and tree in terminal"
 documentation = "https://docs.rs/antex"
@@ -10,10 +10,5 @@ categories = ["text-processing", "visualization", "encoding"]
 license = "MIT OR Apache-2.0"
 edition = "2024"
 exclude = [
-    "rustfmt.toml",
-    "Taskfile.yml",
-    ".github/",
-    ".gitignore",
-    "CODE_OF_CONDUCT.md",
     "manual/"
 ]

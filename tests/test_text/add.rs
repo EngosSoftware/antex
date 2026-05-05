@@ -50,7 +50,7 @@ fn text_add_on_coloured_clear_should_work() {
 fn adding_multiple_types_should_work() {
   let a = never().s("hello");
   let b = never().s("world");
-  let c = "!";
+  let c = '!';
   let d = "!".to_string();
   let e = "☺";
 
@@ -69,21 +69,30 @@ fn adding_multiple_types_should_work() {
   let greeting = a.clone() + " " + b.clone() + c;
   assert_eq!("hello world!", greeting.to_string());
 
-  let greeting = a.clone() + " " + &b + d.as_str();
+  let greeting = a.clone() + " " + &b + d.clone();
   assert_eq!("hello world!", greeting.to_string());
 
   let greeting = c + &a;
   assert_eq!("!hello", greeting.to_string());
 
-  let greeting = d.as_str() + &a;
+  let greeting = d.clone() + &a;
   assert_eq!("!hello", greeting.to_string());
 
   let greeting = c + a.clone();
   assert_eq!("!hello", greeting.to_string());
 
-  let greeting = d.as_str() + a.clone();
+  let greeting = &d + a.clone();
   assert_eq!("!hello", greeting.to_string());
 
-  let greeting = e + a;
+  let greeting = d.clone() + a.clone();
+  assert_eq!("!hello", greeting.to_string());
+
+  let greeting = a.clone() + &d;
+  assert_eq!("hello!", greeting.to_string());
+
+  let greeting = e + a.clone();
   assert_eq!("☺hello", greeting.to_string());
+
+  let greeting = a + e;
+  assert_eq!("hello☺", greeting.to_string());
 }

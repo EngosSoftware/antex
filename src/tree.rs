@@ -436,6 +436,11 @@ impl StyledText for LeafLineBuilder {
     self.text = self.text.bg_color_rgb(c);
     self
   }
+
+  fn fill(mut self, ch: char, width: usize) -> Self {
+    self.text = self.text.fill(ch, width);
+    self
+  }
 }
 
 /// Builder for [TreeNode::Node].
@@ -811,6 +816,11 @@ impl StyledText for NodeLineBuilder {
 
   fn bg_color_rgb(mut self, c: RgbColor) -> Self {
     self.text = self.text.bg_color_rgb(c);
+    self
+  }
+
+  fn fill(mut self, ch: char, width: usize) -> Self {
+    self.text = self.text.fill(ch, width);
     self
   }
 }

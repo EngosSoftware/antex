@@ -35,6 +35,8 @@ pub trait StyledText: Sized {
   fn pad_right<T: Display>(self, ch: char, s: T, width: usize) -> Self;
   /// Pads the content centered with specified width.
   fn pad_center<T: Display>(self, ch: char, s: T, width: usize) -> Self;
+  /// Fills the content with the given character until the given width is reached.
+  fn fill(self, ch: char, width: usize) -> Self;
   /// Adds new content based on the condition.
   fn choose<T: Display>(self, condition: bool, when_true: T, when_false: T) -> Self;
   /// Adds indented content.
@@ -165,8 +167,12 @@ impl Display for Content {
 }
 
 impl Content {
-  fn count(&self) -> usize {
-    self.0.iter().filter(|sequence| sequence.is_char()).count()
+  /// Returns an iterator over characters.
+  fn chars(&self) -> impl Iterator<Item = char> + '_ {
+    self.0.iter().filter_map(|sequence| match sequence {
+      Sequence::Char(c) => Some(*c),
+      _ => None,
+    })
   }
 
   fn write(&self, f: &mut fmt::Formatter<'_>, max: usize) -> fmt::Result {
@@ -181,6 +187,10 @@ impl Content {
       }
     }
     Ok(())
+  }
+
+  fn chr(&mut self, ch: char) {
+    self.0.push(Sequence::Char(ch));
   }
 
   fn str(&mut self, s: &str) {
@@ -207,6 +217,12 @@ impl Content {
 
   fn pad(&mut self, ch: char, n: usize) {
     for _ in 0..n {
+      self.chr(ch);
+    }
+  }
+
+  fn fill(&mut self, ch: char, length: usize) {
+    for _ in 0..length.saturating_sub(self.chars().count()) {
       self.0.push(Sequence::Char(ch));
     }
   }
@@ -224,7 +240,7 @@ pub struct Text {
 impl Display for Text {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     if let Some(width) = f.width() {
-      let fill = width.saturating_sub(self.content.count());
+      let fill = width.saturating_sub(self.content.chars().count());
       let ch = f.fill().to_string();
       if let Some(align) = f.align() {
         match align {
@@ -291,6 +307,16 @@ impl Text {
       content: Default::default(),
     }
   }
+
+  /// Returns an iterator over characters in text.
+  pub fn chars(&self) -> impl Iterator<Item = char> + '_ {
+    self.content.chars()
+  }
+
+  /// Returns the number of characters in text.
+  pub fn count(&self) -> usize {
+    self.chars().count()
+  }
 }
 
 impl StyledText for Text {
@@ -351,6 +377,11 @@ impl StyledText for Text {
     self.content.pad(ch, left_fill);
     self.content.str_n(&buffer, width);
     self.content.pad(ch, fill - left_fill);
+    self
+  }
+
+  fn fill(mut self, ch: char, width: usize) -> Self {
+    self.content.fill(ch, width);
     self
   }
 
@@ -616,6 +647,24 @@ impl AddAssign<&str> for Text {
   }
 }
 
+impl AddAssign<String> for Text {
+  fn add_assign(&mut self, rhs: String) {
+    self.content.str(&rhs);
+  }
+}
+
+impl AddAssign<&String> for Text {
+  fn add_assign(&mut self, rhs: &String) {
+    self.content.str(rhs);
+  }
+}
+
+impl AddAssign<char> for Text {
+  fn add_assign(&mut self, rhs: char) {
+    self.content.str(&rhs.to_string());
+  }
+}
+
 impl Add<Text> for Text {
   type Output = Text;
   fn add(mut self, rhs: Text) -> Text {
@@ -640,6 +689,30 @@ impl Add<&str> for Text {
   }
 }
 
+impl Add<String> for Text {
+  type Output = Text;
+  fn add(mut self, rhs: String) -> Text {
+    self += rhs;
+    self
+  }
+}
+
+impl Add<&String> for Text {
+  type Output = Text;
+  fn add(mut self, rhs: &String) -> Text {
+    self += rhs;
+    self
+  }
+}
+
+impl Add<char> for Text {
+  type Output = Text;
+  fn add(mut self, rhs: char) -> Text {
+    self += rhs;
+    self
+  }
+}
+
 impl Add<Text> for &str {
   type Output = Text;
   fn add(self, rhs: Text) -> Text {
@@ -652,6 +725,54 @@ impl Add<&Text> for &str {
   fn add(self, rhs: &Text) -> Text {
     let mut content = Content::default();
     content.str(self);
+    content.append(&rhs.content);
+    Text { cm: rhs.cm, content }
+  }
+}
+
+impl Add<Text> for String {
+  type Output = Text;
+  fn add(self, rhs: Text) -> Text {
+    self.add(&rhs)
+  }
+}
+
+impl Add<&Text> for String {
+  type Output = Text;
+  fn add(self, rhs: &Text) -> Text {
+    let mut content = Content::default();
+    content.str(&self);
+    content.append(&rhs.content);
+    Text { cm: rhs.cm, content }
+  }
+}
+
+impl Add<Text> for &String {
+  type Output = Text;
+  fn add(self, rhs: Text) -> Text {
+    self.add(&rhs)
+  }
+}
+
+impl Add<&Text> for &String {
+  type Output = Text;
+  fn add(self, rhs: &Text) -> Text {
+    self.as_str().add(rhs)
+  }
+}
+
+impl Add<Text> for char {
+  type Output = Text;
+  fn add(self, rhs: Text) -> Text {
+    self.add(&rhs)
+  }
+}
+
+impl Add<&Text> for char {
+  type Output = Text;
+  fn add(self, rhs: &Text) -> Text {
+    let mut content = Content::default();
+    content.chr(self);
     content.append(&rhs.content);
     Text { cm: rhs.cm, content }
   }
