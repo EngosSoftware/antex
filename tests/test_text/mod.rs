@@ -8,7 +8,9 @@ mod colors;
 mod filling;
 mod format;
 mod formatting;
+mod matches;
 mod padding;
+mod plural;
 mod writer;
 
 #[test]
@@ -105,4 +107,20 @@ fn text_coloured_from_cm_on_should_work() {
   text = text.yellow().s("Hello");
   assert_eq!("\x1b[33mHello", text.to_string());
   assert_eq!("\x1b[33mHello", format!("{}", text));
+}
+
+#[test]
+fn text_as_ref_should_work() {
+  let t1 = Text::default().yellow().s("Hello").reset();
+  let t2 = Text::default().red().s("Hello").reset();
+
+  fn a(t: impl AsRef<Text>) -> String {
+    t.as_ref().characters()
+  }
+
+  fn b(t: impl AsRef<Text>) -> String {
+    t.as_ref().characters()
+  }
+
+  assert_eq!(a(t1), b(t2));
 }

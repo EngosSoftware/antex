@@ -161,10 +161,6 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
-  fn indent<T: Display>(self, indent: usize, s: T) -> Self {
-    self.pad(' ', indent, s)
-  }
-
   fn align_left<T: Display>(self, s: T, width: usize) -> Self {
     self.pad_right(' ', s, width)
   }
@@ -197,9 +193,23 @@ impl StyledText for LeafLineBuilder {
     self
   }
 
-  fn choose<T: Display>(mut self, condition: bool, when_true: T, when_false: T) -> Self {
+  fn fill(mut self, ch: char, width: usize) -> Self {
+    self.text = self.text.fill(ch, width);
+    self
+  }
+
+  fn choose<T: Display, F: Display>(mut self, condition: bool, when_true: T, when_false: F) -> Self {
     self.text = self.text.choose(condition, when_true, when_false);
     self
+  }
+
+  fn matches<C: IntoIterator<Item = (bool, impl Display)>>(mut self, conditions: C) -> Self {
+    self.text = self.text.matches(conditions);
+    self
+  }
+
+  fn indent<T: Display>(self, indent: usize, s: T) -> Self {
+    self.pad(' ', indent, s)
   }
 
   fn bold(mut self) -> Self {
@@ -434,11 +444,6 @@ impl StyledText for LeafLineBuilder {
 
   fn bg_color_rgb(mut self, c: RgbColor) -> Self {
     self.text = self.text.bg_color_rgb(c);
-    self
-  }
-
-  fn fill(mut self, ch: char, width: usize) -> Self {
-    self.text = self.text.fill(ch, width);
     self
   }
 }
@@ -543,10 +548,6 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
-  fn indent<T: Display>(self, indent: usize, s: T) -> Self {
-    self.pad(' ', indent, s)
-  }
-
   fn align_left<T: Display>(self, s: T, width: usize) -> Self {
     self.pad_right(' ', s, width)
   }
@@ -579,9 +580,23 @@ impl StyledText for NodeLineBuilder {
     self
   }
 
-  fn choose<T: Display>(mut self, condition: bool, when_true: T, when_false: T) -> Self {
+  fn fill(mut self, ch: char, width: usize) -> Self {
+    self.text = self.text.fill(ch, width);
+    self
+  }
+
+  fn choose<T: Display, F: Display>(mut self, condition: bool, when_true: T, when_false: F) -> Self {
     self.text = self.text.choose(condition, when_true, when_false);
     self
+  }
+
+  fn matches<C: IntoIterator<Item = (bool, impl Display)>>(mut self, conditions: C) -> Self {
+    self.text = self.text.matches(conditions);
+    self
+  }
+
+  fn indent<T: Display>(self, indent: usize, s: T) -> Self {
+    self.pad(' ', indent, s)
   }
 
   fn bold(mut self) -> Self {
@@ -816,11 +831,6 @@ impl StyledText for NodeLineBuilder {
 
   fn bg_color_rgb(mut self, c: RgbColor) -> Self {
     self.text = self.text.bg_color_rgb(c);
-    self
-  }
-
-  fn fill(mut self, ch: char, width: usize) -> Self {
-    self.text = self.text.fill(ch, width);
     self
   }
 }

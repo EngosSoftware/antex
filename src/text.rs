@@ -38,7 +38,9 @@ pub trait StyledText: Sized {
   /// Fills the content with the given character until the given width is reached.
   fn fill(self, ch: char, width: usize) -> Self;
   /// Adds new content based on the condition.
-  fn choose<T: Display>(self, condition: bool, when_true: T, when_false: T) -> Self;
+  fn choose<T: Display, F: Display>(self, condition: bool, when_true: T, when_false: F) -> Self;
+  /// Adds new content based on the first matching condition.
+  fn matches<C: IntoIterator<Item = (bool, impl Display)>>(self, conditions: C) -> Self;
   /// Adds indented content.
   fn indent<T: Display>(self, indent: usize, s: T) -> Self;
   /// Style text as bold.
@@ -237,6 +239,12 @@ pub struct Text {
   content: Content,
 }
 
+impl AsRef<Text> for Text {
+  fn as_ref(&self) -> &Text {
+    self
+  }
+}
+
 impl Display for Text {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     if let Some(width) = f.width() {
@@ -317,6 +325,14 @@ impl Text {
   pub fn count(&self) -> usize {
     self.chars().count()
   }
+
+  /// Returns text containing only characters,
+  /// all control sequences (if present) are omitted.
+  ///
+  /// It is an equivalent of calling `chars().collect::<String>()`.
+  pub fn characters(&self) -> String {
+    self.content.chars().collect()
+  }
 }
 
 impl StyledText for Text {
@@ -385,8 +401,17 @@ impl StyledText for Text {
     self
   }
 
-  fn choose<T: Display>(self, condition: bool, when_true: T, when_false: T) -> Self {
-    self.s(if condition { when_true } else { when_false })
+  fn choose<T: Display, F: Display>(self, condition: bool, when_true: T, when_false: F) -> Self {
+    self.s(if condition { when_true.to_string() } else { when_false.to_string() })
+  }
+
+  fn matches<C: IntoIterator<Item = (bool, impl Display)>>(self, conditions: C) -> Self {
+    for (condition, content) in conditions.into_iter() {
+      if condition {
+        return self.s(content);
+      }
+    }
+    self
   }
 
   fn indent<T: Display>(self, indent: usize, s: T) -> Self {

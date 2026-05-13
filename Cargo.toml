@@ -1,11 +1,12 @@
 [package]
 name = "antex"
-version = "0.2.2"
+version = "0.2.3"
 authors = ["Dariusz Depta <depta@engos.de>"]
 description = "Styled text and tree in terminal"
 documentation = "https://docs.rs/antex"
 repository = "https://github.com/EngosSoftware/antex.git"
 keywords = ["ansi", "ascii", "text", "tree", "styled"]
+homepage = "https://engossoftware.github.io/antex/"
 categories = ["text-processing", "visualization", "encoding"]
 license = "MIT OR Apache-2.0"
 edition = "2024"
