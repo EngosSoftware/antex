@@ -1,5 +1,6 @@
 use antex::{Color, ColorMode, StyledText, leaf, node};
 
+#[expect(clippy::too_many_lines)]
 fn main() {
     // Collect the command-line arguments.
     let args = std::env::args().collect::<Vec<String>>();
@@ -183,5 +184,5 @@ fn main() {
         .end();
 
     // Print the tree with indentation.
-    print!("{:1$}", root, indent);
+    print!("{root:indent$}");
 }

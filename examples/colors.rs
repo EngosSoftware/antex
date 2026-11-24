@@ -95,11 +95,11 @@ fn enumerated_colors() {
 fn indexed_colors() {
     let mut normal_colors = auto();
     for (index, label) in LABELS.iter().enumerate() {
-        normal_colors += auto().color_8(index as u8).s(label);
+        normal_colors += auto().color_8(u8::try_from(index).unwrap()).s(label);
     }
     let mut bright_colors = auto();
     for (index, label) in LABELS.iter().enumerate() {
-        bright_colors += auto().bright_color_8(index as u8).s(label);
+        bright_colors += auto().bright_color_8(u8::try_from(index).unwrap()).s(label);
     }
     print_colors(normal_colors, bright_colors);
 }

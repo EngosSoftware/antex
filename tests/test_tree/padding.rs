@@ -2,11 +2,11 @@ use antex::{Color, ColorMode, StyledText, leaf, node};
 
 #[test]
 fn tree_content_pad_should_work() {
-    const EXPECTED: &str = r#"
+    const EXPECTED: &str = r"
  root
  ├─ *****red first
  └─ *****yellow second
-"#;
+";
 
     let cm = ColorMode::Off;
     let mut root = node(Color::None, cm).line().s("root").end();
@@ -29,11 +29,11 @@ fn tree_content_pad_should_work() {
 
 #[test]
 fn tree_content_indent_should_work() {
-    const EXPECTED: &str = r#"
+    const EXPECTED: &str = r"
  root
  ├─      red first
  └─      yellow second
-"#;
+";
 
     let cm = ColorMode::Off;
     let mut root = node(Color::None, cm).line().s("root").end();
@@ -51,11 +51,11 @@ fn tree_content_indent_should_work() {
 
 #[test]
 fn tree_content_pad_left_should_work() {
-    const EXPECTED: &str = r#"
+    const EXPECTED: &str = r"
  root
  ├─ *****red first
  └─ **yellow second
-"#;
+";
 
     let cm = ColorMode::Off;
     let mut root = node(Color::None, cm).line().s("root").end();
@@ -78,11 +78,11 @@ fn tree_content_pad_left_should_work() {
 
 #[test]
 fn tree_content_pad_right_should_work() {
-    const EXPECTED: &str = r#"
+    const EXPECTED: &str = r"
  root
  ├─ red***** first
  └─ yellow** second
-"#;
+";
 
     let cm = ColorMode::Off;
     let mut root = node(Color::None, cm).line().s("root").end();
@@ -105,11 +105,11 @@ fn tree_content_pad_right_should_work() {
 
 #[test]
 fn tree_content_pad_center_should_work() {
-    const EXPECTED: &str = r#"
+    const EXPECTED: &str = r"
  root
  ├─ **red*** first
  └─ *yellow* second
-"#;
+";
 
     let cm = ColorMode::Off;
     let mut root = node(Color::None, cm).line().s("root").end();

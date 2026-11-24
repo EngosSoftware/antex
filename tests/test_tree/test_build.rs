@@ -1,6 +1,6 @@
 use antex::{Color, ColorMode, StyledText, leaf, node};
 
-const EXPECTED: &str = r#"
+const EXPECTED: &str = r"
  node 1
  ├─ node 1_1
  │  ├─ line 1_1_1
@@ -27,9 +27,9 @@ const EXPECTED: &str = r#"
     │  line 1_3_3
     │  line 1_3_4
     └─ only one line
-"#;
+";
 
-const EXPECTED_INDENTED: &str = r#"
+const EXPECTED_INDENTED: &str = r"
       node 1
       ├─ node 1_1
       │  ├─ line 1_1_1
@@ -56,9 +56,10 @@ const EXPECTED_INDENTED: &str = r#"
          │  line 1_3_3
          │  line 1_3_4
          └─ only one line
-"#;
+";
 
 #[test]
+#[expect(clippy::too_many_lines)]
 fn building_tree_should_work() {
     let cm = ColorMode::Off;
     let root = node(Color::None, cm)
@@ -164,6 +165,6 @@ fn building_tree_should_work() {
         )
         .end();
 
-    assert_eq!(EXPECTED, format!("\n{}", root));
-    assert_eq!(EXPECTED_INDENTED, format!("\n{:5}", root));
+    assert_eq!(EXPECTED, format!("\n{root}"));
+    assert_eq!(EXPECTED_INDENTED, format!("\n{root:5}"));
 }

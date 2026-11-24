@@ -1,29 +1,29 @@
 use antex::{StyledText, Text, auto};
 
 fn display(plain_text: &str, styled_text: &Text, width: usize) {
-    println!("[{}]", plain_text);
-    println!("|{}|", styled_text);
+    println!("[{plain_text}]");
+    println!("|{styled_text}|");
 
-    println!("[{:w$}]", plain_text, w = width);
-    println!("|{:w$}|", styled_text, w = width);
+    println!("[{plain_text:width$}]");
+    println!("|{styled_text:width$}|");
 
-    println!("[{:<w$}]", plain_text, w = width);
-    println!("|{:<w$}|", styled_text, w = width);
+    println!("[{plain_text:<width$}]");
+    println!("|{styled_text:<width$}|");
 
-    println!("[{:>w$}]", plain_text, w = width);
-    println!("|{:>w$}|", styled_text, w = width);
+    println!("[{plain_text:>width$}]");
+    println!("|{styled_text:>width$}|");
 
-    println!("[{:^w$}]", plain_text, w = width);
-    println!("|{:^w$}|", styled_text, w = width);
+    println!("[{plain_text:^width$}]");
+    println!("|{styled_text:^width$}|");
 
-    println!("[{:-<w$}]", plain_text, w = width);
-    println!("|{:-<w$}|", styled_text, w = width);
+    println!("[{plain_text:-<width$}]");
+    println!("|{styled_text:-<width$}|");
 
-    println!("[{:->w$}]", plain_text, w = width);
-    println!("|{:->w$}|", styled_text, w = width);
+    println!("[{plain_text:->width$}]");
+    println!("|{styled_text:->width$}|");
 
-    println!("[{:-^w$}]", plain_text, w = width);
-    println!("|{:-^w$}|", styled_text, w = width);
+    println!("[{plain_text:-^width$}]");
+    println!("|{styled_text:-^width$}|",);
 }
 
 fn main() {
