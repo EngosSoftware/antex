@@ -67,60 +67,12 @@ fn get_tree() -> TreeNode {
 fn _0001() {
     let tree = get_tree();
     let indent = 0;
-    write!(
-        &mut FailingWriter::new("^"),
-        "{:width$}",
-        tree,
-        width = indent
-    )
-    .unwrap_err();
-    write!(
-        &mut FailingWriter::new("#"),
-        "{:width$}",
-        tree,
-        width = indent
-    )
-    .unwrap_err();
-    write!(
-        &mut FailingWriter::new("*"),
-        "{:width$}",
-        tree,
-        width = indent
-    )
-    .unwrap_err();
-    write!(
-        &mut FailingWriter::new("@"),
-        "{:width$}",
-        tree,
-        width = indent
-    )
-    .unwrap_err();
-    write!(
-        &mut FailingWriter::new("   "),
-        "{:width$}",
-        tree,
-        width = indent
-    )
-    .unwrap_err();
-    write!(
-        &mut FailingWriter::new(" └─"),
-        "{:width$}",
-        tree,
-        width = indent
-    )
-    .unwrap_err();
-    write!(
-        &mut FailingWriter::new(" ├─"),
-        "{:width$}",
-        tree,
-        width = indent
-    )
-    .unwrap_err();
-    write!(
-        &mut FailingWriter::new(" │ "),
-        "{:width$}",
-        tree,
-        width = indent
-    )
-    .unwrap_err();
+    write!(&mut FailingWriter::new("^"), "{tree:indent$}").unwrap_err();
+    write!(&mut FailingWriter::new("#"), "{tree:indent$}").unwrap_err();
+    write!(&mut FailingWriter::new("*"), "{tree:indent$}").unwrap_err();
+    write!(&mut FailingWriter::new("@"), "{tree:indent$}").unwrap_err();
+    write!(&mut FailingWriter::new("   "), "{tree:indent$}").unwrap_err();
+    write!(&mut FailingWriter::new(" └─"), "{tree:indent$}").unwrap_err();
+    write!(&mut FailingWriter::new(" ├─"), "{tree:indent$}").unwrap_err();
+    write!(&mut FailingWriter::new(" │ "), "{tree:indent$}").unwrap_err();
 }

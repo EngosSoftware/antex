@@ -7,7 +7,7 @@ struct FailingWriter {
 }
 
 impl FailingWriter {
-    fn new(max: usize) -> Self {
+    const fn new(max: usize) -> Self {
         Self { count: 1, max }
     }
 }
@@ -17,9 +17,8 @@ impl Write for FailingWriter {
         for _ in s.chars() {
             if self.count >= self.max {
                 return Err(std::fmt::Error);
-            } else {
-                self.count += 1;
             }
+            self.count += 1;
         }
         Ok(())
     }

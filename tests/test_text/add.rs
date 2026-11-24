@@ -7,7 +7,7 @@ fn text_add_default_should_work() {
     let b = Text::default().s(" world!");
     let text = a + b;
     assert_eq!("Hello world!", text.to_string());
-    assert_eq!("Hello world!", format!("{}", text));
+    assert_eq!("Hello world!", format!("{text}"));
 }
 
 #[test]
@@ -16,7 +16,7 @@ fn text_add_off_should_work() {
     let b = Text::new(ColorMode::Off).s(" world!");
     let text = a + b;
     assert_eq!("Hello world!", text.to_string());
-    assert_eq!("Hello world!", format!("{}", text));
+    assert_eq!("Hello world!", format!("{text}"));
 }
 
 #[test]
@@ -25,7 +25,7 @@ fn text_add_on_should_work() {
     let b = Text::new(ColorMode::On).s(" world!");
     let text = a + b;
     assert_eq!("Hello world!", text.to_string());
-    assert_eq!("Hello world!", format!("{}", text));
+    assert_eq!("Hello world!", format!("{text}"));
 }
 
 #[test]
@@ -34,7 +34,7 @@ fn text_add_on_coloured_should_work() {
     let b = Text::new(ColorMode::On).green().s(" world!");
     let text = a + b;
     assert_eq!("\x1b[33mHello\x1b[32m world!", text.to_string());
-    assert_eq!("\x1b[33mHello\x1b[32m world!", format!("{}", text));
+    assert_eq!("\x1b[33mHello\x1b[32m world!", format!("{text}"));
 }
 
 #[test]
@@ -43,56 +43,56 @@ fn text_add_on_coloured_clear_should_work() {
     let b = Text::new(ColorMode::On).s(" world!");
     let text = a + b;
     assert_eq!("\x1b[33mHello\x1b[0m world!", text.to_string());
-    assert_eq!("\x1b[33mHello\x1b[0m world!", format!("{}", text));
+    assert_eq!("\x1b[33mHello\x1b[0m world!", format!("{text}"));
 }
 
 #[test]
 fn adding_multiple_types_should_work() {
-    let a = never().s("hello");
-    let b = never().s("world");
-    let c = '!';
-    let d = "!".to_string();
-    let e = "☺";
+    let hello = never().s("hello");
+    let world = never().s("world");
+    let exclamation_chr = '!';
+    let exclamation_str = "!".to_string();
+    let smiley = "☺";
 
-    let greeting = a.clone() + b.clone();
+    let greeting = hello.clone() + world.clone();
     assert_eq!("helloworld", greeting.to_string());
 
-    let greeting = a.clone() + &b;
+    let greeting = hello.clone() + &world;
     assert_eq!("helloworld", greeting.to_string());
 
-    let greeting = a.clone() + c;
+    let greeting = hello.clone() + exclamation_chr;
     assert_eq!("hello!", greeting.to_string());
 
-    let greeting = a.clone() + d.as_str();
+    let greeting = hello.clone() + exclamation_str.as_str();
     assert_eq!("hello!", greeting.to_string());
 
-    let greeting = a.clone() + " " + b.clone() + c;
+    let greeting = hello.clone() + " " + world.clone() + exclamation_chr;
     assert_eq!("hello world!", greeting.to_string());
 
-    let greeting = a.clone() + " " + &b + d.clone();
+    let greeting = hello.clone() + " " + &world + exclamation_str.clone();
     assert_eq!("hello world!", greeting.to_string());
 
-    let greeting = c + &a;
+    let greeting = exclamation_chr + &hello;
     assert_eq!("!hello", greeting.to_string());
 
-    let greeting = d.clone() + &a;
+    let greeting = exclamation_str.clone() + &hello;
     assert_eq!("!hello", greeting.to_string());
 
-    let greeting = c + a.clone();
+    let greeting = exclamation_chr + hello.clone();
     assert_eq!("!hello", greeting.to_string());
 
-    let greeting = &d + a.clone();
+    let greeting = &exclamation_str + hello.clone();
     assert_eq!("!hello", greeting.to_string());
 
-    let greeting = d.clone() + a.clone();
+    let greeting = exclamation_str.clone() + hello.clone();
     assert_eq!("!hello", greeting.to_string());
 
-    let greeting = a.clone() + &d;
+    let greeting = hello.clone() + &exclamation_str;
     assert_eq!("hello!", greeting.to_string());
 
-    let greeting = e + a.clone();
+    let greeting = smiley + hello.clone();
     assert_eq!("☺hello", greeting.to_string());
 
-    let greeting = a + e;
+    let greeting = hello + smiley;
     assert_eq!("hello☺", greeting.to_string());
 }

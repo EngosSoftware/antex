@@ -2,11 +2,11 @@ use antex::{Color, ColorMode, StyledText, leaf, node};
 
 #[test]
 fn matches_should_work() {
-    const EXPECTED: &str = r#"
+    const EXPECTED: &str = r"
  root
  ├─ -red
  └─ +green
-"#;
+";
 
     let cm = ColorMode::Off;
     let mut root = node(Color::None, cm).line().s("root").end();

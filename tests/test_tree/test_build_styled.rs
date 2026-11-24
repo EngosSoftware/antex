@@ -1,6 +1,6 @@
 use antex::{Color, ColorMode, StyledText, Text, leaf, node};
 
-const EXPECTED: &str = r#"
+const EXPECTED: &str = r"
  [30m[47mnode 1[0m
 [33m ├─[0m [1m[40mA[41mB[42mC[43mD[44mE[45mF[46mG[47mH[43mI[48;5;134mJ[48;2;60;130;87mK[46mL[0mM[0m
 [33m │ [0m ├─[0m line 1_1_1[0m
@@ -31,9 +31,10 @@ const EXPECTED: &str = r#"
 [33m   [0m[35m │ [0m [37m[100mA[101mB[102mC[103mD[104mE[105mF[106mG[107mH[0m
 [33m   [0m[35m ├─[0m [30mo[31mn[32ml[33my[34m|[35mo[36mn[37me[33m|[38;5;134ml[38;2;60;130;87mi[33mne[0m with multiple characters[0m
 [33m   [0m[35m └─[0m [90mA[91mB[92mC[93mD[94mE[95mF[96mG[97mH [96mX[93mY [37m[100ma[101mb[102mc[103md[104mr[105mf[106mg[107mh[0m[35m [106mx[103my[0m
-"#;
+";
 
 #[test]
+#[expect(clippy::too_many_lines)]
 fn building_styled_tree_should_work() {
     let cm = ColorMode::On;
 
@@ -411,5 +412,5 @@ fn building_styled_tree_should_work() {
         )
         .end();
 
-    assert_eq!(EXPECTED, format!("\n{}", root));
+    assert_eq!(EXPECTED, format!("\n{root}"));
 }

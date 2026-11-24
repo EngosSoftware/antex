@@ -2,11 +2,11 @@ use antex::{Color, ColorMode, StyledText, leaf, node};
 
 #[test]
 fn tree_content_fill_should_work() {
-    const EXPECTED: &str = r#"
+    const EXPECTED: &str = r"
  root
  ├─ red first*********
  └─ yellow second*****
-"#;
+";
 
     let cm = ColorMode::Off;
     let mut root = node(Color::None, cm).line().s("root").end();

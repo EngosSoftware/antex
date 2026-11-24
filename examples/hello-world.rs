@@ -12,5 +12,5 @@ fn main() {
         .s("world")
         .reset()
         .s('!');
-    println!("{}", greeting);
+    println!("{greeting}");
 }

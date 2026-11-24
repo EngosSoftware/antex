@@ -624,7 +624,7 @@ fn bg_bright_color_8_should_work() {
 fn color_256_should_work() {
     for i in 0..=255 {
         assert_eq!(
-            format!("\x1b[38;5;{}mhello", i),
+            format!("\x1b[38;5;{i}mhello"),
             always().color_256(i).s("hello").to_string()
         );
         assert_eq!("hello", never().color_256(i).s("hello").to_string());
@@ -635,7 +635,7 @@ fn color_256_should_work() {
 fn bg_color_256_should_work() {
     for i in 0..=255 {
         assert_eq!(
-            format!("\x1b[48;5;{}mhello", i),
+            format!("\x1b[48;5;{i}mhello"),
             always().bg_color_256(i).s("hello").to_string()
         );
         assert_eq!("hello", never().bg_color_256(i).s("hello").to_string());
@@ -648,7 +648,7 @@ fn color_rgb_should_work() {
         for g in 20..=30 {
             for b in 50..=60 {
                 assert_eq!(
-                    format!("\x1b[38;2;{};{};{}mhello", r, g, b),
+                    format!("\x1b[38;2;{r};{g};{b}mhello"),
                     always().color_rgb((r, g, b)).s("hello").to_string()
                 );
                 assert_eq!("hello", never().color_rgb((r, g, b)).s("hello").to_string());
@@ -663,7 +663,7 @@ fn bg_color_rgb_should_work() {
         for g in 20..=30 {
             for b in 50..=60 {
                 assert_eq!(
-                    format!("\x1b[48;2;{};{};{}mhello", r, g, b),
+                    format!("\x1b[48;2;{r};{g};{b}mhello"),
                     always().bg_color_rgb((r, g, b)).s("hello").to_string()
                 );
                 assert_eq!(

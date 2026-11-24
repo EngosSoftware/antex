@@ -37,39 +37,39 @@ impl TreeNode {
     /// Writes this node to provided writer.
     fn write_node(
         f: &mut dyn Write,
-        node: &TreeNode,
+        node: &Self,
         levels: &mut Vec<Level>,
         indent: &str,
     ) -> fmt::Result {
         // Display lines of text.
         let max_pos = levels.len();
         let mut second_line = String::new();
-        write!(f, "{}", indent)?;
+        write!(f, "{indent}")?;
         for (pos, lev) in levels.iter().enumerate() {
             let color = lev.cm.color(lev.color, false);
             let clear = lev.cm.reset();
             let last_row = pos == max_pos - 1;
             if lev.n == 1 {
-                if !last_row {
-                    write!(f, "{}{}{}", color, NONE, clear)?
+                if last_row {
+                    write!(f, "{color}{EDGE}{clear}")?;
                 } else {
-                    write!(f, "{}{}{}", color, EDGE, clear)?
+                    write!(f, "{color}{NONE}{clear}")?;
                 }
-                _ = write!(&mut second_line, "{}{}{}", color, NONE, clear);
+                _ = write!(&mut second_line, "{color}{NONE}{clear}");
             } else {
-                if !last_row {
-                    write!(f, "{}{}{}", color, PIPE, clear)?
+                if last_row {
+                    write!(f, "{color}{FORK}{clear}")?;
                 } else {
-                    write!(f, "{}{}{}", color, FORK, clear)?
+                    write!(f, "{color}{PIPE}{clear}")?;
                 }
-                _ = write!(&mut second_line, "{}{}{}", color, PIPE, clear);
+                _ = write!(&mut second_line, "{color}{PIPE}{clear}");
             }
         }
         // Traverse the child nodes.
         match node {
-            TreeNode::Node(title, children, color, cm) => {
+            Self::Node(title, children, color, cm) => {
                 let mut deep = children.len();
-                writeln!(f, " {}", title)?;
+                writeln!(f, " {title}")?;
                 for node in children {
                     levels.push(Level {
                         n: deep,
@@ -81,11 +81,11 @@ impl TreeNode {
                     levels.pop();
                 }
             }
-            TreeNode::Leaf(lines) => {
+            Self::Leaf(lines) => {
                 for (i, line) in lines.iter().enumerate() {
                     match i {
-                        0 => writeln!(f, " {}", line)?,
-                        _ => writeln!(f, "{}{} {}", indent, second_line, line)?,
+                        0 => writeln!(f, " {line}")?,
+                        _ => writeln!(f, "{indent}{second_line} {line}")?,
                     }
                 }
             }
@@ -94,15 +94,17 @@ impl TreeNode {
     }
 }
 
+#[must_use]
 pub fn node(color: Color, cm: ColorMode) -> NodeBuilder {
     NodeBuilder::new(color, cm)
 }
 
+#[must_use]
 pub fn leaf(cm: ColorMode) -> LeafBuilder {
     LeafBuilder::new(cm)
 }
 
-/// Builder for [TreeNode::Leaf].
+/// Builder for [`TreeNode::Leaf`].
 #[derive(Debug, Clone)]
 pub struct LeafBuilder {
     /// Color mode.
@@ -112,6 +114,7 @@ pub struct LeafBuilder {
 }
 
 impl LeafBuilder {
+    #[must_use]
     pub fn new(cm: ColorMode) -> Self {
         Self {
             cm,
@@ -119,6 +122,7 @@ impl LeafBuilder {
         }
     }
 
+    #[must_use]
     pub fn line(self) -> LeafLineBuilder {
         LeafLineBuilder {
             cm: self.cm,
@@ -131,12 +135,13 @@ impl LeafBuilder {
         self.lines.push(line);
     }
 
+    #[must_use]
     pub fn end(self) -> TreeNode {
         TreeNode::Leaf(self.lines)
     }
 }
 
-/// Builder for [TreeNode::Leaf]'s line.
+/// Builder for [`TreeNode::Leaf`]'s line.
 #[derive(Debug, Clone)]
 pub struct LeafLineBuilder {
     cm: ColorMode,
@@ -145,6 +150,7 @@ pub struct LeafLineBuilder {
 }
 
 impl LeafLineBuilder {
+    #[must_use]
     pub fn end(self) -> LeafBuilder {
         let mut lines = self.lines;
         lines.push(self.text.reset());
@@ -465,7 +471,7 @@ impl StyledText for LeafLineBuilder {
     }
 }
 
-/// Builder for [TreeNode::Node].
+/// Builder for [`TreeNode::Node`].
 #[derive(Debug, Clone)]
 pub struct NodeBuilder {
     color: Color,
@@ -475,6 +481,7 @@ pub struct NodeBuilder {
 }
 
 impl NodeBuilder {
+    #[must_use]
     pub fn new(color: Color, cm: ColorMode) -> Self {
         Self {
             color,
@@ -484,6 +491,7 @@ impl NodeBuilder {
         }
     }
 
+    #[must_use]
     pub fn line(self) -> NodeLineBuilder {
         NodeLineBuilder {
             color: self.color,
@@ -497,6 +505,7 @@ impl NodeBuilder {
         self.line = line;
     }
 
+    #[must_use]
     pub fn child(mut self, child: TreeNode) -> Self {
         self.children.push(child);
         self
@@ -506,6 +515,7 @@ impl NodeBuilder {
         self.children.push(child);
     }
 
+    #[must_use]
     pub fn opt_child(mut self, opt_child: Option<TreeNode>) -> Self {
         if let Some(child) = opt_child {
             self.children.push(child);
@@ -519,12 +529,13 @@ impl NodeBuilder {
         }
     }
 
+    #[must_use]
     pub fn end(self) -> TreeNode {
         TreeNode::Node(self.line, self.children, self.color, self.cm)
     }
 }
 
-/// Builder for [TreeNode::Node]'s text line.
+/// Builder for [`TreeNode::Node`]'s text line.
 #[derive(Debug, Clone)]
 pub struct NodeLineBuilder {
     color: Color,
@@ -534,6 +545,7 @@ pub struct NodeLineBuilder {
 }
 
 impl NodeLineBuilder {
+    #[must_use]
     pub fn end(self) -> NodeBuilder {
         NodeBuilder {
             color: self.color,

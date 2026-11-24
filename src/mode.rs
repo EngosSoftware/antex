@@ -24,37 +24,37 @@ impl Default for ColorMode {
 }
 
 impl From<&str> for ColorMode {
-    /// Creates [ColorMode] from str reference.
+    /// Creates [`ColorMode`] from str reference.
     fn from(value: &str) -> Self {
         Self::new(value)
     }
 }
 
 impl From<String> for ColorMode {
-    /// Creates [ColorMode] from string.
+    /// Creates [`ColorMode`] from string.
     fn from(value: String) -> Self {
         Self::new(value)
     }
 }
 
 impl From<&String> for ColorMode {
-    /// Creates [ColorMode] from string reference.
+    /// Creates [`ColorMode`] from string reference.
     fn from(value: &String) -> Self {
         Self::new(value)
     }
 }
 
 impl From<Option<String>> for ColorMode {
-    /// Creates [ColorMode] from optional string.
+    /// Creates [`ColorMode`] from optional string.
     fn from(value: Option<String>) -> Self {
-        value.map_or(Self::default(), Self::new)
+        value.map_or_else(Self::default, Self::new)
     }
 }
 
 impl From<Option<&String>> for ColorMode {
-    /// Creates [ColorMode] from optional string reference.
+    /// Creates [`ColorMode`] from optional string reference.
     fn from(value: Option<&String>) -> Self {
-        value.map_or(Self::default(), Self::new)
+        value.map_or_else(Self::default, Self::new)
     }
 }
 
@@ -70,70 +70,87 @@ impl ColorMode {
         Self::default()
     }
 
-    pub fn black(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn black(&self, bright: bool) -> Cow<'static, str> {
         self.color_8(0, bright)
     }
 
-    pub fn red(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn red(&self, bright: bool) -> Cow<'static, str> {
         self.color_8(1, bright)
     }
 
-    pub fn green(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn green(&self, bright: bool) -> Cow<'static, str> {
         self.color_8(2, bright)
     }
 
-    pub fn yellow(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn yellow(&self, bright: bool) -> Cow<'static, str> {
         self.color_8(3, bright)
     }
 
-    pub fn blue(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn blue(&self, bright: bool) -> Cow<'static, str> {
         self.color_8(4, bright)
     }
 
-    pub fn magenta(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn magenta(&self, bright: bool) -> Cow<'static, str> {
         self.color_8(5, bright)
     }
 
-    pub fn cyan(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn cyan(&self, bright: bool) -> Cow<'static, str> {
         self.color_8(6, bright)
     }
 
-    pub fn white(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn white(&self, bright: bool) -> Cow<'static, str> {
         self.color_8(7, bright)
     }
 
-    pub fn bg_black(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn bg_black(&self, bright: bool) -> Cow<'static, str> {
         self.bg_color_8(0, bright)
     }
 
-    pub fn bg_red(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn bg_red(&self, bright: bool) -> Cow<'static, str> {
         self.bg_color_8(1, bright)
     }
 
-    pub fn bg_green(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn bg_green(&self, bright: bool) -> Cow<'static, str> {
         self.bg_color_8(2, bright)
     }
 
-    pub fn bg_yellow(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn bg_yellow(&self, bright: bool) -> Cow<'static, str> {
         self.bg_color_8(3, bright)
     }
 
-    pub fn bg_blue(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn bg_blue(&self, bright: bool) -> Cow<'static, str> {
         self.bg_color_8(4, bright)
     }
 
-    pub fn bg_magenta(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn bg_magenta(&self, bright: bool) -> Cow<'static, str> {
         self.bg_color_8(5, bright)
     }
 
-    pub fn bg_cyan(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn bg_cyan(&self, bright: bool) -> Cow<'static, str> {
         self.bg_color_8(6, bright)
     }
 
-    pub fn bg_white(&self, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn bg_white(&self, bright: bool) -> Cow<'static, str> {
         self.bg_color_8(7, bright)
     }
 
+    #[must_use]
     pub fn color(&self, c: Color, bright: bool) -> Cow<'static, str> {
         match c {
             Color::None => Cow::Borrowed(""),
@@ -150,6 +167,7 @@ impl ColorMode {
         }
     }
 
+    #[must_use]
     pub fn bg_color(&self, c: Color, bright: bool) -> Cow<'static, str> {
         match c {
             Color::None => Cow::Borrowed(""),
@@ -166,9 +184,10 @@ impl ColorMode {
         }
     }
 
-    pub fn color_8(&self, c: u8, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn color_8(&self, c: u8, bright: bool) -> Cow<'static, str> {
         match self {
-            ColorMode::On => match (bright, c) {
+            Self::On => match (bright, c) {
                 (false, 0) => Cow::Borrowed("\x1b[30m"),
                 (false, 1) => Cow::Borrowed("\x1b[31m"),
                 (false, 2) => Cow::Borrowed("\x1b[32m"),
@@ -187,13 +206,14 @@ impl ColorMode {
                 (true, 7) => Cow::Borrowed("\x1b[97m"),
                 _ => Cow::Borrowed(""),
             },
-            _ => Cow::Borrowed(""),
+            Self::Off => Cow::Borrowed(""),
         }
     }
 
-    pub fn bg_color_8(&self, c: u8, bright: bool) -> Cow<'static, str> {
+    #[must_use]
+    pub const fn bg_color_8(&self, c: u8, bright: bool) -> Cow<'static, str> {
         match self {
-            ColorMode::On => match (bright, c) {
+            Self::On => match (bright, c) {
                 (false, 0) => Cow::Borrowed("\x1b[40m"),
                 (false, 1) => Cow::Borrowed("\x1b[41m"),
                 (false, 2) => Cow::Borrowed("\x1b[42m"),
@@ -212,63 +232,71 @@ impl ColorMode {
                 (true, 7) => Cow::Borrowed("\x1b[107m"),
                 _ => Cow::Borrowed(""),
             },
-            _ => Cow::Borrowed(""),
+            Self::Off => Cow::Borrowed(""),
         }
     }
 
+    #[must_use]
     pub fn color_256(&self, c: u8) -> String {
         match self {
-            ColorMode::On => format!("\x1b[38;5;{}m", c),
-            _ => "".to_string(),
+            Self::On => format!("\x1b[38;5;{c}m"),
+            Self::Off => String::new(),
         }
     }
 
+    #[must_use]
     pub fn bg_color_256(&self, c: u8) -> String {
         match self {
-            ColorMode::On => format!("\x1b[48;5;{}m", c),
-            _ => "".to_string(),
+            Self::On => format!("\x1b[48;5;{c}m"),
+            Self::Off => String::new(),
         }
     }
 
+    #[must_use]
     pub fn color_rgb(&self, c: RgbColor) -> String {
         match self {
-            ColorMode::On => format!("\x1b[38;2;{};{};{}m", c.0, c.1, c.2),
-            _ => "".to_string(),
+            Self::On => format!("\x1b[38;2;{};{};{}m", c.0, c.1, c.2),
+            Self::Off => String::new(),
         }
     }
 
+    #[must_use]
     pub fn bg_color_rgb(&self, c: RgbColor) -> String {
         match self {
-            ColorMode::On => format!("\x1b[48;2;{};{};{}m", c.0, c.1, c.2),
-            _ => "".to_string(),
+            Self::On => format!("\x1b[48;2;{};{};{}m", c.0, c.1, c.2),
+            Self::Off => String::new(),
         }
     }
 
-    pub fn bold(&self) -> &str {
+    #[must_use]
+    pub const fn bold(&self) -> &str {
         match self {
-            ColorMode::On => "\x1b[1m",
-            _ => "",
+            Self::On => "\x1b[1m",
+            Self::Off => "",
         }
     }
 
-    pub fn italic(&self) -> &str {
+    #[must_use]
+    pub const fn italic(&self) -> &str {
         match self {
-            ColorMode::On => "\x1b[3m",
-            _ => "",
+            Self::On => "\x1b[3m",
+            Self::Off => "",
         }
     }
 
-    pub fn underline(&self) -> &str {
+    #[must_use]
+    pub const fn underline(&self) -> &str {
         match self {
-            ColorMode::On => "\x1b[4m",
-            _ => "",
+            Self::On => "\x1b[4m",
+            Self::Off => "",
         }
     }
 
-    pub fn reset(&self) -> &str {
+    #[must_use]
+    pub const fn reset(&self) -> &str {
         match self {
-            ColorMode::On => "\x1b[0m",
-            _ => "",
+            Self::On => "\x1b[0m",
+            Self::Off => "",
         }
     }
 }

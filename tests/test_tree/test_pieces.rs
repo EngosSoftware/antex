@@ -1,12 +1,12 @@
 use antex::{Color, ColorMode, StyledText, Text, node};
 
-const EXPECTED: &str = r#"
+const EXPECTED: &str = r"
  root
  ├─ child 1
  ├─ child 2
  │  └─ child 2a
  └─ child 3
-"#;
+";
 
 #[test]
 fn building_tree_from_pieces_should_work() {

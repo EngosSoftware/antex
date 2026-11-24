@@ -4,10 +4,10 @@ use antex::{ColorMode, StyledText, Text};
 
 fn main() {
     let args = std::env::args().collect::<Vec<String>>();
-    let color_mode = if args.len() != 2 {
-        ColorMode::default()
-    } else {
+    let color_mode = if args.len() == 2 {
         ColorMode::new(&args[1])
+    } else {
+        ColorMode::default()
     };
     println!(
         "{}",
