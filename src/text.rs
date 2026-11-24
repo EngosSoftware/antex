@@ -4,7 +4,7 @@ use crate::colors::{Color, RgbColor};
 use crate::mode::ColorMode;
 use std::borrow::Cow;
 use std::fmt;
-use std::fmt::{Alignment, Debug, Display};
+use std::fmt::{Alignment, Debug, Display, Write};
 use std::ops::{Add, AddAssign};
 
 /// A trait representing styled text.
@@ -313,29 +313,34 @@ impl AsRef<Self> for Text {
 
 impl Display for Text {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let write_fill = |f: &mut fmt::Formatter, ch, count| -> fmt::Result {
+            for _ in 0..count {
+                f.write_char(ch)?;
+            }
+            Ok(())
+        };
         if let Some(width) = f.width() {
-            let fill = width.saturating_sub(self.content.chars().count());
-            let ch = f.fill().to_string();
+            let fill_width = width.saturating_sub(self.content.chars().count());
+            let fill_char = f.fill();
             if let Some(align) = f.align() {
                 match align {
                     Alignment::Left => {
                         self.content.write(f, width)?;
-                        write!(f, "{}", ch.repeat(fill))?;
+                        write_fill(f, fill_char, fill_width)?;
                     }
                     Alignment::Right => {
-                        write!(f, "{}", ch.repeat(fill))?;
+                        write_fill(f, fill_char, fill_width)?;
                         self.content.write(f, width)?;
                     }
                     Alignment::Center => {
-                        let left_fill = fill / 2;
-                        write!(f, "{}", ch.repeat(left_fill))?;
+                        write_fill(f, fill_char, fill_width / 2)?;
                         self.content.write(f, width)?;
-                        write!(f, "{}", ch.repeat(fill - left_fill))?;
+                        write_fill(f, fill_char, fill_width - fill_width / 2)?;
                     }
                 }
             } else {
                 self.content.write(f, width)?;
-                write!(f, "{}", ch.repeat(fill))?;
+                write_fill(f, fill_char, fill_width)?;
             }
         } else {
             write!(f, "{}", self.content)?;
