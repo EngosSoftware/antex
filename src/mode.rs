@@ -245,7 +245,7 @@ impl ColorMode {
     }
 
     #[must_use]
-    pub const fn bold(&self) -> &str {
+    pub const fn bold(&self) -> &'static str {
         match self {
             Self::On => "\x1b[1m",
             Self::Off => "",
@@ -253,7 +253,7 @@ impl ColorMode {
     }
 
     #[must_use]
-    pub const fn italic(&self) -> &str {
+    pub const fn italic(&self) -> &'static str {
         match self {
             Self::On => "\x1b[3m",
             Self::Off => "",
@@ -261,7 +261,7 @@ impl ColorMode {
     }
 
     #[must_use]
-    pub const fn underline(&self) -> &str {
+    pub const fn underline(&self) -> &'static str {
         match self {
             Self::On => "\x1b[4m",
             Self::Off => "",
@@ -269,7 +269,7 @@ impl ColorMode {
     }
 
     #[must_use]
-    pub const fn reset(&self) -> &str {
+    pub const fn reset(&self) -> &'static str {
         match self {
             Self::On => "\x1b[0m",
             Self::Off => "",

@@ -2,6 +2,7 @@
 
 use crate::colors::{Color, RgbColor};
 use crate::mode::ColorMode;
+use std::borrow::Cow;
 use std::fmt;
 use std::fmt::{Alignment, Debug, Display};
 use std::ops::{Add, AddAssign};
@@ -203,7 +204,7 @@ pub trait StyledText: Sized {
 #[derive(Debug, Clone)]
 enum Sequence {
     Char(char),
-    Control(String),
+    Control(Cow<'static, str>),
 }
 
 impl Display for Sequence {
@@ -272,8 +273,8 @@ impl Content {
         }
     }
 
-    fn ctrl(&mut self, s: &impl ToString) {
-        self.0.push(Sequence::Control(s.to_string()));
+    fn ctrl(&mut self, s: Cow<'static, str>) {
+        self.0.push(Sequence::Control(s));
     }
 
     fn append(&mut self, s: &Self) {
@@ -416,7 +417,7 @@ impl StyledText for Text {
     }
 
     fn reset(mut self) -> Self {
-        self.content.ctrl(&self.cm.reset());
+        self.content.ctrl(self.cm.reset().into());
         self
     }
 
@@ -503,237 +504,237 @@ impl StyledText for Text {
     }
 
     fn bold(mut self) -> Self {
-        self.content.ctrl(&self.cm.bold());
+        self.content.ctrl(self.cm.bold().into());
         self
     }
 
     fn italic(mut self) -> Self {
-        self.content.ctrl(&self.cm.italic());
+        self.content.ctrl(self.cm.italic().into());
         self
     }
 
     fn underline(mut self) -> Self {
-        self.content.ctrl(&self.cm.underline());
+        self.content.ctrl(self.cm.underline().into());
         self
     }
 
     fn black(mut self) -> Self {
-        self.content.ctrl(&self.cm.black(false));
+        self.content.ctrl(self.cm.black(false));
         self
     }
 
     fn bright_black(mut self) -> Self {
-        self.content.ctrl(&self.cm.black(true));
+        self.content.ctrl(self.cm.black(true));
         self
     }
 
     fn red(mut self) -> Self {
-        self.content.ctrl(&self.cm.red(false));
+        self.content.ctrl(self.cm.red(false));
         self
     }
 
     fn bright_red(mut self) -> Self {
-        self.content.ctrl(&self.cm.red(true));
+        self.content.ctrl(self.cm.red(true));
         self
     }
 
     fn green(mut self) -> Self {
-        self.content.ctrl(&self.cm.green(false));
+        self.content.ctrl(self.cm.green(false));
         self
     }
 
     fn bright_green(mut self) -> Self {
-        self.content.ctrl(&self.cm.green(true));
+        self.content.ctrl(self.cm.green(true));
         self
     }
 
     fn yellow(mut self) -> Self {
-        self.content.ctrl(&self.cm.yellow(false));
+        self.content.ctrl(self.cm.yellow(false));
         self
     }
 
     fn bright_yellow(mut self) -> Self {
-        self.content.ctrl(&self.cm.yellow(true));
+        self.content.ctrl(self.cm.yellow(true));
         self
     }
 
     fn blue(mut self) -> Self {
-        self.content.ctrl(&self.cm.blue(false));
+        self.content.ctrl(self.cm.blue(false));
         self
     }
 
     fn bright_blue(mut self) -> Self {
-        self.content.ctrl(&self.cm.blue(true));
+        self.content.ctrl(self.cm.blue(true));
         self
     }
 
     fn magenta(mut self) -> Self {
-        self.content.ctrl(&self.cm.magenta(false));
+        self.content.ctrl(self.cm.magenta(false));
         self
     }
 
     fn bright_magenta(mut self) -> Self {
-        self.content.ctrl(&self.cm.magenta(true));
+        self.content.ctrl(self.cm.magenta(true));
         self
     }
 
     fn cyan(mut self) -> Self {
-        self.content.ctrl(&self.cm.cyan(false));
+        self.content.ctrl(self.cm.cyan(false));
         self
     }
 
     fn bright_cyan(mut self) -> Self {
-        self.content.ctrl(&self.cm.cyan(true));
+        self.content.ctrl(self.cm.cyan(true));
         self
     }
 
     fn white(mut self) -> Self {
-        self.content.ctrl(&self.cm.white(false));
+        self.content.ctrl(self.cm.white(false));
         self
     }
 
     fn bright_white(mut self) -> Self {
-        self.content.ctrl(&self.cm.white(true));
+        self.content.ctrl(self.cm.white(true));
         self
     }
 
     fn bg_black(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_black(false));
+        self.content.ctrl(self.cm.bg_black(false));
         self
     }
 
     fn bg_bright_black(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_black(true));
+        self.content.ctrl(self.cm.bg_black(true));
         self
     }
 
     fn bg_red(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_red(false));
+        self.content.ctrl(self.cm.bg_red(false));
         self
     }
 
     fn bg_bright_red(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_red(true));
+        self.content.ctrl(self.cm.bg_red(true));
         self
     }
 
     fn bg_green(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_green(false));
+        self.content.ctrl(self.cm.bg_green(false));
         self
     }
 
     fn bg_bright_green(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_green(true));
+        self.content.ctrl(self.cm.bg_green(true));
         self
     }
 
     fn bg_yellow(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_yellow(false));
+        self.content.ctrl(self.cm.bg_yellow(false));
         self
     }
 
     fn bg_bright_yellow(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_yellow(true));
+        self.content.ctrl(self.cm.bg_yellow(true));
         self
     }
 
     fn bg_blue(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_blue(false));
+        self.content.ctrl(self.cm.bg_blue(false));
         self
     }
 
     fn bg_bright_blue(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_blue(true));
+        self.content.ctrl(self.cm.bg_blue(true));
         self
     }
 
     fn bg_magenta(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_magenta(false));
+        self.content.ctrl(self.cm.bg_magenta(false));
         self
     }
 
     fn bg_bright_magenta(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_magenta(true));
+        self.content.ctrl(self.cm.bg_magenta(true));
         self
     }
 
     fn bg_cyan(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_cyan(false));
+        self.content.ctrl(self.cm.bg_cyan(false));
         self
     }
 
     fn bg_bright_cyan(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_cyan(true));
+        self.content.ctrl(self.cm.bg_cyan(true));
         self
     }
 
     fn bg_white(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_white(false));
+        self.content.ctrl(self.cm.bg_white(false));
         self
     }
 
     fn bg_bright_white(mut self) -> Self {
-        self.content.ctrl(&self.cm.bg_white(true));
+        self.content.ctrl(self.cm.bg_white(true));
         self
     }
 
     fn color(mut self, c: Color) -> Self {
-        self.content.ctrl(&self.cm.color(c, false));
+        self.content.ctrl(self.cm.color(c, false));
         self
     }
 
     fn bright_color(mut self, c: Color) -> Self {
-        self.content.ctrl(&self.cm.color(c, true));
+        self.content.ctrl(self.cm.color(c, true));
         self
     }
 
     fn bg_color(mut self, c: Color) -> Self {
-        self.content.ctrl(&self.cm.bg_color(c, false));
+        self.content.ctrl(self.cm.bg_color(c, false));
         self
     }
 
     fn bg_bright_color(mut self, c: Color) -> Self {
-        self.content.ctrl(&self.cm.bg_color(c, true));
+        self.content.ctrl(self.cm.bg_color(c, true));
         self
     }
 
     fn color_8(mut self, c: u8) -> Self {
-        self.content.ctrl(&self.cm.color_8(c, false));
+        self.content.ctrl(self.cm.color_8(c, false));
         self
     }
 
     fn bright_color_8(mut self, c: u8) -> Self {
-        self.content.ctrl(&self.cm.color_8(c, true));
+        self.content.ctrl(self.cm.color_8(c, true));
         self
     }
 
     fn bg_color_8(mut self, c: u8) -> Self {
-        self.content.ctrl(&self.cm.bg_color_8(c, false));
+        self.content.ctrl(self.cm.bg_color_8(c, false));
         self
     }
 
     fn bg_bright_color_8(mut self, c: u8) -> Self {
-        self.content.ctrl(&self.cm.bg_color_8(c, true));
+        self.content.ctrl(self.cm.bg_color_8(c, true));
         self
     }
 
     fn color_256(mut self, c: u8) -> Self {
-        self.content.ctrl(&self.cm.color_256(c));
+        self.content.ctrl(self.cm.color_256(c).into());
         self
     }
 
     fn bg_color_256(mut self, c: u8) -> Self {
-        self.content.ctrl(&self.cm.bg_color_256(c));
+        self.content.ctrl(self.cm.bg_color_256(c).into());
         self
     }
 
     fn color_rgb(mut self, c: RgbColor) -> Self {
-        self.content.ctrl(&self.cm.color_rgb(c));
+        self.content.ctrl(self.cm.color_rgb(c).into());
         self
     }
 
     fn bg_color_rgb(mut self, c: RgbColor) -> Self {
-        self.content.ctrl(&self.cm.bg_color_rgb(c));
+        self.content.ctrl(self.cm.bg_color_rgb(c).into());
         self
     }
 }
