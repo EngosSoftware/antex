@@ -38,7 +38,7 @@ Key features:
 
 ## Usage
 
-```Rust
+```rust
 use antex::{StyledText, Text};
 
 fn main() {
