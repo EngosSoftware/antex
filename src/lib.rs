@@ -1,4 +1,4 @@
-//! # Styled text and tree in terminal
+#![doc = include_str!("../docs/lib.rs.md")]
 
 mod colors;
 mod mode;

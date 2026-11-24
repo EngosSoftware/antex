@@ -1,3 +1,5 @@
+//! # Styled text
+
 use crate::colors::{Color, RgbColor};
 use crate::mode::ColorMode;
 use std::fmt;
