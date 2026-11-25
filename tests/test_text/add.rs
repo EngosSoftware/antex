@@ -50,8 +50,8 @@ fn text_add_on_coloured_clear_should_work() {
 fn adding_multiple_types_should_work() {
     let hello = never().s("hello");
     let world = never().s("world");
-    let exclamation_chr = '!';
-    let exclamation_str = "!".to_string();
+    let excl_chr = '!';
+    let excl_str = "!".to_string();
     let smiley = "☺";
 
     let greeting = hello.clone() + world.clone();
@@ -60,39 +60,48 @@ fn adding_multiple_types_should_work() {
     let greeting = hello.clone() + &world;
     assert_eq!("helloworld", greeting.to_string());
 
-    let greeting = hello.clone() + exclamation_chr;
+    let greeting = hello.clone() + "";
+    assert_eq!("hello", greeting.to_string());
+
+    let greeting = hello.clone() + excl_chr;
     assert_eq!("hello!", greeting.to_string());
 
-    let greeting = hello.clone() + exclamation_str.as_str();
+    let greeting = hello.clone() + excl_str.as_str();
     assert_eq!("hello!", greeting.to_string());
 
-    let greeting = hello.clone() + " " + world.clone() + exclamation_chr;
+    let greeting = hello.clone() + " " + world.clone() + excl_chr;
     assert_eq!("hello world!", greeting.to_string());
 
-    let greeting = hello.clone() + " " + &world + exclamation_str.clone();
+    let greeting = hello.clone() + " " + &world + excl_str.clone();
     assert_eq!("hello world!", greeting.to_string());
 
-    let greeting = exclamation_chr + &hello;
+    let greeting = excl_chr + &hello;
     assert_eq!("!hello", greeting.to_string());
 
-    let greeting = exclamation_str.clone() + &hello;
+    let greeting = excl_str.clone() + &hello;
     assert_eq!("!hello", greeting.to_string());
 
-    let greeting = exclamation_chr + hello.clone();
+    let greeting = excl_chr + hello.clone();
     assert_eq!("!hello", greeting.to_string());
 
-    let greeting = &exclamation_str + hello.clone();
+    let greeting = &excl_str + hello.clone();
     assert_eq!("!hello", greeting.to_string());
 
-    let greeting = exclamation_str.clone() + hello.clone();
+    let greeting = excl_str.clone() + hello.clone();
     assert_eq!("!hello", greeting.to_string());
 
-    let greeting = hello.clone() + &exclamation_str;
+    let greeting = hello.clone() + &excl_str;
     assert_eq!("hello!", greeting.to_string());
 
     let greeting = smiley + hello.clone();
     assert_eq!("☺hello", greeting.to_string());
 
-    let greeting = hello + smiley;
+    let greeting = hello.clone() + smiley;
     assert_eq!("hello☺", greeting.to_string());
+
+    let greeting = smiley + &hello;
+    assert_eq!("☺hello", greeting.to_string());
+
+    let greeting = &excl_str + &hello;
+    assert_eq!("!hello", greeting.to_string());
 }

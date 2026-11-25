@@ -186,53 +186,29 @@ impl ColorMode {
 
     #[must_use]
     pub const fn color_8(&self, c: u8, bright: bool) -> Cow<'static, str> {
-        match self {
-            Self::On => match (bright, c) {
-                (false, 0) => Cow::Borrowed("\x1b[30m"),
-                (false, 1) => Cow::Borrowed("\x1b[31m"),
-                (false, 2) => Cow::Borrowed("\x1b[32m"),
-                (false, 3) => Cow::Borrowed("\x1b[33m"),
-                (false, 4) => Cow::Borrowed("\x1b[34m"),
-                (false, 5) => Cow::Borrowed("\x1b[35m"),
-                (false, 6) => Cow::Borrowed("\x1b[36m"),
-                (false, 7) => Cow::Borrowed("\x1b[37m"),
-                (true, 0) => Cow::Borrowed("\x1b[90m"),
-                (true, 1) => Cow::Borrowed("\x1b[91m"),
-                (true, 2) => Cow::Borrowed("\x1b[92m"),
-                (true, 3) => Cow::Borrowed("\x1b[93m"),
-                (true, 4) => Cow::Borrowed("\x1b[94m"),
-                (true, 5) => Cow::Borrowed("\x1b[95m"),
-                (true, 6) => Cow::Borrowed("\x1b[96m"),
-                (true, 7) => Cow::Borrowed("\x1b[97m"),
-                _ => Cow::Borrowed(""),
-            },
-            Self::Off => Cow::Borrowed(""),
+        #[rustfmt::skip]
+        const FOREGROUND_COLORS: [[&str; 8]; 2] = [
+            ["\x1b[30m", "\x1b[31m", "\x1b[32m", "\x1b[33m", "\x1b[34m", "\x1b[35m", "\x1b[36m","\x1b[37m"],
+            ["\x1b[90m", "\x1b[91m", "\x1b[92m", "\x1b[93m", "\x1b[94m", "\x1b[95m", "\x1b[96m","\x1b[97m"],
+        ];
+        if matches!(self, Self::On) && c < 8 {
+            Cow::Borrowed(FOREGROUND_COLORS[bright as usize][c as usize])
+        } else {
+            Cow::Borrowed("")
         }
     }
 
     #[must_use]
     pub const fn bg_color_8(&self, c: u8, bright: bool) -> Cow<'static, str> {
-        match self {
-            Self::On => match (bright, c) {
-                (false, 0) => Cow::Borrowed("\x1b[40m"),
-                (false, 1) => Cow::Borrowed("\x1b[41m"),
-                (false, 2) => Cow::Borrowed("\x1b[42m"),
-                (false, 3) => Cow::Borrowed("\x1b[43m"),
-                (false, 4) => Cow::Borrowed("\x1b[44m"),
-                (false, 5) => Cow::Borrowed("\x1b[45m"),
-                (false, 6) => Cow::Borrowed("\x1b[46m"),
-                (false, 7) => Cow::Borrowed("\x1b[47m"),
-                (true, 0) => Cow::Borrowed("\x1b[100m"),
-                (true, 1) => Cow::Borrowed("\x1b[101m"),
-                (true, 2) => Cow::Borrowed("\x1b[102m"),
-                (true, 3) => Cow::Borrowed("\x1b[103m"),
-                (true, 4) => Cow::Borrowed("\x1b[104m"),
-                (true, 5) => Cow::Borrowed("\x1b[105m"),
-                (true, 6) => Cow::Borrowed("\x1b[106m"),
-                (true, 7) => Cow::Borrowed("\x1b[107m"),
-                _ => Cow::Borrowed(""),
-            },
-            Self::Off => Cow::Borrowed(""),
+        #[rustfmt::skip]
+        const BACKGROUND_COLORS: [[&str; 8]; 2] = [
+            ["\x1b[40m", "\x1b[41m", "\x1b[42m", "\x1b[43m", "\x1b[44m", "\x1b[45m", "\x1b[46m", "\x1b[47m"],
+            ["\x1b[100m", "\x1b[101m", "\x1b[102m", "\x1b[103m", "\x1b[104m", "\x1b[105m", "\x1b[106m", "\x1b[107m"],
+        ];
+        if matches!(self, Self::On) && c < 8 {
+            Cow::Borrowed(BACKGROUND_COLORS[bright as usize][c as usize])
+        } else {
+            Cow::Borrowed("")
         }
     }
 
@@ -269,7 +245,7 @@ impl ColorMode {
     }
 
     #[must_use]
-    pub const fn bold(&self) -> &str {
+    pub const fn bold(&self) -> &'static str {
         match self {
             Self::On => "\x1b[1m",
             Self::Off => "",
@@ -277,7 +253,7 @@ impl ColorMode {
     }
 
     #[must_use]
-    pub const fn italic(&self) -> &str {
+    pub const fn italic(&self) -> &'static str {
         match self {
             Self::On => "\x1b[3m",
             Self::Off => "",
@@ -285,7 +261,7 @@ impl ColorMode {
     }
 
     #[must_use]
-    pub const fn underline(&self) -> &str {
+    pub const fn underline(&self) -> &'static str {
         match self {
             Self::On => "\x1b[4m",
             Self::Off => "",
@@ -293,7 +269,7 @@ impl ColorMode {
     }
 
     #[must_use]
-    pub const fn reset(&self) -> &str {
+    pub const fn reset(&self) -> &'static str {
         match self {
             Self::On => "\x1b[0m",
             Self::Off => "",
