@@ -9,6 +9,7 @@
 
   .all
     .task clean
+    .task fmt
     .task build
     .task clippy
     .task pedantic

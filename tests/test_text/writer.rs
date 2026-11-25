@@ -1,4 +1,4 @@
-use antex::{StyledText, never};
+use antex::{StyledText, always, never};
 use std::fmt::Write;
 
 struct FailingWriter {
@@ -36,4 +36,18 @@ fn _0001() {
     write!(&mut FailingWriter::new(1), "{:^1}", never().s("ab")).unwrap_err();
     write!(&mut FailingWriter::new(1), "{:^5}", never().s("ab")).unwrap_err();
     write!(&mut FailingWriter::new(4), "{:^5}", never().s("ab")).unwrap_err();
+}
+
+#[test]
+fn _0002() {
+    write!(&mut FailingWriter::new(1), "{}", always().red()).unwrap_err();
+    write!(&mut FailingWriter::new(1), "{:1}", always().red()).unwrap_err();
+    write!(&mut FailingWriter::new(4), "{:5}", always().red()).unwrap_err();
+    write!(&mut FailingWriter::new(1), "{:<1}", always().red()).unwrap_err();
+    write!(&mut FailingWriter::new(4), "{:<5}", always().red()).unwrap_err();
+    write!(&mut FailingWriter::new(1), "{:>1}", always().red()).unwrap_err();
+    write!(&mut FailingWriter::new(1), "{:>5}", always().red()).unwrap_err();
+    write!(&mut FailingWriter::new(1), "{:^1}", always().red()).unwrap_err();
+    write!(&mut FailingWriter::new(1), "{:^5}", always().red()).unwrap_err();
+    write!(&mut FailingWriter::new(4), "{:^5}", always().red()).unwrap_err();
 }

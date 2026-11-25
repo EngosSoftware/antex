@@ -23,7 +23,7 @@ fn display(plain_text: &str, styled_text: &Text, width: usize) {
     println!("|{styled_text:->width$}|");
 
     println!("[{plain_text:-^width$}]");
-    println!("|{styled_text:-^width$}|",);
+    println!("|{styled_text:-^width$}|");
 }
 
 fn main() {

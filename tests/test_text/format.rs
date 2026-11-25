@@ -36,6 +36,22 @@ fn width_should_work() {
 }
 
 #[test]
+fn width_cut_should_work() {
+    assert_eq!(
+        "\x1b[34mHello\x1b[0m\x1b[33m\x1b[35m\x1b[0m",
+        format!("{:5}", text())
+    );
+}
+
+#[test]
+fn zero_width_should_work() {
+    assert_eq!(
+        "\x1b[34m\x1b[0m\x1b[33m\x1b[35m\x1b[0m",
+        format!("{:w$}", text(), w = 0)
+    );
+}
+
+#[test]
 fn align_left_should_work() {
     assert_eq!(
         "\x1b[34mHello\x1b[0m ☺ \x1b[33mworld \x1b[35m1.999\x1b[0m           ",
